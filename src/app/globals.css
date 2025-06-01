@@ -1,0 +1,72 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply text-gray-900 bg-white;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-display text-gray-900;
+  }
+}
+
+@keyframes wiggle {
+  0%,
+  100% {
+    transform: rotate(-1deg);
+  }
+  25% {
+    transform: rotate(1deg) scale(1.01);
+  }
+  50% {
+    transform: rotate(-1deg) scale(1.02);
+  }
+  75% {
+    transform: rotate(1deg) scale(1.01);
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0);
+  }
+  25% {
+    transform: translateY(-4px) rotate(2deg);
+  }
+  75% {
+    transform: translateY(4px) rotate(-2deg);
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-primary text-gray-900 px-6 py-3 rounded-lg font-medium 
+           hover:bg-opacity-90 hover:scale-[1.02] hover:shadow-lg
+           transition-all duration-300 ease-out;
+  }
+
+  .link-hover {
+    @apply relative after:absolute after:bottom-0 after:left-0 
+           after:w-full after:h-[2px] after:bg-primary
+           after:origin-left after:scale-x-0 
+           hover:after:scale-x-100 after:transition-transform
+           after:duration-300 after:ease-out;
+  }
+
+  .card-hover {
+    @apply transition-all duration-300 ease-out
+           hover:shadow-xl hover:shadow-gray-100/50
+           hover:translate-y-[-4px] hover:border-primary/30;
+  }
+}
