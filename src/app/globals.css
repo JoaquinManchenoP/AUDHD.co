@@ -20,6 +20,32 @@
   }
 }
 
+@layer components {
+  .font-display {
+    font-family: "DM Sans", sans-serif;
+  }
+
+  .btn-primary {
+    @apply bg-primary text-gray-900 px-6 py-3 rounded-lg font-medium 
+           hover:bg-opacity-90 hover:scale-[1.02] hover:shadow-lg
+           transition-all duration-300 ease-out;
+  }
+
+  .link-hover {
+    @apply relative after:absolute after:bottom-0 after:left-0 
+           after:w-full after:h-[2px] after:bg-primary
+           after:origin-left after:scale-x-0 
+           hover:after:scale-x-100 after:transition-transform
+           after:duration-300 after:ease-out;
+  }
+
+  .card-hover {
+    @apply transition-all duration-300 ease-out
+           hover:shadow-xl hover:shadow-gray-100/50
+           hover:translate-y-[-4px] hover:border-primary/30;
+  }
+}
+
 @keyframes wiggle {
   0%,
   100% {
@@ -46,27 +72,5 @@
   }
   75% {
     transform: translateY(4px) rotate(-2deg);
-  }
-}
-
-@layer components {
-  .btn-primary {
-    @apply bg-primary text-gray-900 px-6 py-3 rounded-lg font-medium 
-           hover:bg-opacity-90 hover:scale-[1.02] hover:shadow-lg
-           transition-all duration-300 ease-out;
-  }
-
-  .link-hover {
-    @apply relative after:absolute after:bottom-0 after:left-0 
-           after:w-full after:h-[2px] after:bg-primary
-           after:origin-left after:scale-x-0 
-           hover:after:scale-x-100 after:transition-transform
-           after:duration-300 after:ease-out;
-  }
-
-  .card-hover {
-    @apply transition-all duration-300 ease-out
-           hover:shadow-xl hover:shadow-gray-100/50
-           hover:translate-y-[-4px] hover:border-primary/30;
   }
 }
