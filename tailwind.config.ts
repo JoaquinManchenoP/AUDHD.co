@@ -48,8 +48,7 @@ const config: Config = {
         wave: "wave 2s ease-in-out infinite",
       },
       fontFamily: {
-        sans: ["var(--font-comic-neue)", "system-ui", "sans-serif"],
-        display: ["var(--font-fredoka-one)", "cursive"],
+        sans: ["Space Grotesk", "system-ui", "sans-serif"],
       },
       maxWidth: {
         "8xl": "88rem",
@@ -66,15 +65,15 @@ const config: Config = {
             },
             h1: {
               color: "#36454F",
-              fontFamily: "var(--font-fredoka-one)",
+              fontFamily: "DM Sans, sans-serif",
             },
             h2: {
               color: "#36454F",
-              fontFamily: "var(--font-fredoka-one)",
+              fontFamily: "DM Sans, sans-serif",
             },
             h3: {
               color: "#36454F",
-              fontFamily: "var(--font-fredoka-one)",
+              fontFamily: "DM Sans, sans-serif",
             },
           },
         },
