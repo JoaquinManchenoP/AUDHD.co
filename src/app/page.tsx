@@ -2,6 +2,169 @@ import Image from "next/image";
 import Link from "next/link";
 import NewsletterForm from "@/components/forms/NewsletterForm";
 import BioSection from "@/components/BioSection";
+import { Suspense } from "react";
+
+interface MainGuide {
+  id: number;
+  documentId: string;
+  guideTitle: string;
+  guideDescription: string;
+  guideImage?: any;
+  order: number;
+  createdAt: string;
+  updatedAt: string;
+  publishedAt: string;
+}
+
+// Function to fetch main guides from Strapi
+async function fetchMainGuides(): Promise<MainGuide[]> {
+  try {
+    console.log("🔄 Fetching xone guides from Strapi...");
+    const response = await fetch(
+      "http://localhost:1337/api/xones?populate=*&sort=order:asc",
+      {
+        cache: "no-store",
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const rawData = await response.json();
+    console.log("📡 Raw Strapi response:", rawData);
+
+    // Extract the data array from the Strapi response
+    const guides = rawData.data || [];
+    console.log("📊 Extracted guides array:", guides);
+    console.log("🔢 Number of guides found:", guides.length);
+
+    // Log the structure of each guide if they exist
+    if (guides.length > 0) {
+      guides.forEach((guide: any, index: number) => {
+        console.log(`🔍 Guide ${index + 1} structure:`, guide);
+        console.log(`   - ID: ${guide.id}`);
+        console.log(`   - Title: ${guide.attributes?.title || "No title"}`);
+        console.log(
+          `   - Description: ${
+            guide.attributes?.description || "No description"
+          }`
+        );
+      });
+    } else {
+      console.log("⚠️ No guides found in the collection");
+      console.log(
+        "💡 Add some entries to the xone collection in Strapi to see data here"
+      );
+    }
+
+    // Return the processed guides array
+    return guides;
+  } catch (error) {
+    console.error("❌ Error fetching xone guides:", error);
+    return [];
+  }
+}
+
+// Loading component for guides
+function GuidesLoading() {
+  return (
+    <div className="space-y-4">
+      <h2 className="font-display text-xl font-semibold text-gray-900">
+        Popular guides
+      </h2>
+      <div className="space-y-3">
+        {[1, 2, 3, 4].map((i) => (
+          <div
+            key={i}
+            className="p-4 md:p-5 bg-white border border-gray-200 rounded-lg animate-pulse"
+          >
+            <div className="flex items-start justify-between">
+              <div className="space-y-2 flex-1">
+                <div className="h-5 bg-gray-200 rounded w-3/4"></div>
+                <div className="h-4 bg-gray-200 rounded w-full"></div>
+              </div>
+              <div className="h-6 bg-gray-200 rounded w-6 ml-4"></div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// Helper function to safely get guide data regardless of structure
+function getGuideData(guide: MainGuide) {
+  return {
+    title: guide.guideTitle || "Untitled Guide",
+    description: guide.guideDescription || "No description available",
+  };
+}
+
+// Main guides component - now displays the fetched guides
+async function MainGuides() {
+  const guides = await fetchMainGuides();
+
+  if (guides.length === 0) {
+    return (
+      <div className="space-y-4">
+        <h2 className="font-display text-xl font-semibold text-gray-900">
+          Popular guides
+        </h2>
+        <div className="text-center py-8">
+          <p className="text-gray-500">No guides available yet.</p>
+          <p className="text-sm text-gray-400 mt-2">
+            Add some entries to the xone collection in Strapi to see data here.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-4">
+      <h2 className="font-display text-xl font-semibold text-gray-900">
+        Popular guides
+      </h2>
+      <div className="space-y-3">
+        {guides.map((guide) => {
+          // Add safety checks and debugging
+          console.log("🎯 Rendering guide:", guide);
+          console.log("   - Guide object:", guide);
+          console.log("   - Guide title:", guide.guideTitle);
+          console.log("   - Guide description:", guide.guideDescription);
+          console.log("   - Type of guide:", typeof guide);
+          console.log("   - Guide keys:", Object.keys(guide));
+
+          // Use helper function to get data safely
+          const guideData = getGuideData(guide);
+
+          return (
+            <Link
+              key={guide.id}
+              href={`/guides/${guide.id}`}
+              className="block group p-4 md:p-5 bg-white border border-gray-200 rounded-lg hover:border-[#fcc029]/30 hover:shadow-lg active:scale-98 active:shadow-sm active:border-[#fcc029] transition-all duration-300"
+            >
+              <div className="flex items-start justify-between">
+                <div className="space-y-2">
+                  <h3 className="font-display text-lg font-semibold text-gray-900 group-hover:text-[#fcc029] transition-colors">
+                    {guideData.title}
+                  </h3>
+                  <p className="text-gray-600 text-sm">
+                    {guideData.description}
+                  </p>
+                </div>
+                <span className="text-[#fcc029] text-xl inline-block motion-safe:animate-[float_3s_ease-in-out_infinite] group-hover:text-2xl group-hover:animate-none group-hover:translate-x-2 group-hover:-translate-y-1 group-active:translate-x-3 group-active:scale-90 transition-all duration-300">
+                  →
+                </span>
+              </div>
+            </Link>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
 
 export default function Home() {
   return (
@@ -44,98 +207,10 @@ export default function Home() {
                 <BioSection />
               </div>
 
-              {/* Popular Guides */}
-              <div className="space-y-4">
-                <h2 className="font-display text-xl font-semibold text-gray-900">
-                  Popular guides
-                </h2>
-
-                <div className="space-y-3">
-                  <Link
-                    href="/guides/executive-function"
-                    className="block group p-4 md:p-5 bg-white border border-gray-200 rounded-lg hover:border-[#fcc029]/30 hover:shadow-lg active:scale-98 active:shadow-sm active:border-[#fcc029] transition-all duration-300"
-                  >
-                    <div className="flex items-start justify-between">
-                      <div className="space-y-2">
-                        <h3 className="font-display text-lg font-semibold text-gray-900 group-hover:text-[#fcc029] transition-colors">
-                          The Executive Function Playbook
-                        </h3>
-                        <p className="text-gray-600 text-sm">
-                          My complete system for managing time, tasks, and
-                          energy with ADHD. Includes visual frameworks and
-                          step-by-step implementation guides.
-                        </p>
-                      </div>
-                      <span className="text-[#fcc029] text-xl inline-block motion-safe:animate-[float_3s_ease-in-out_infinite] group-hover:text-2xl group-hover:animate-none group-hover:translate-x-2 group-hover:-translate-y-1 group-active:translate-x-3 group-active:scale-90 transition-all duration-300">
-                        →
-                      </span>
-                    </div>
-                  </Link>
-
-                  <Link
-                    href="/guides/sensory-toolkit"
-                    className="block group p-4 md:p-5 bg-white border border-gray-200 rounded-lg hover:border-[#fcc029]/30 hover:shadow-lg active:scale-98 active:shadow-sm active:border-[#fcc029] transition-all duration-300"
-                  >
-                    <div className="flex items-start justify-between">
-                      <div className="space-y-2">
-                        <h3 className="font-display text-lg font-semibold text-gray-900 group-hover:text-[#fcc029] transition-colors">
-                          The Sensory Processing Toolkit
-                        </h3>
-                        <p className="text-gray-600 text-sm">
-                          30+ tools and strategies to manage sensory overwhelm.
-                          Design your environment for focus, comfort, and
-                          reduced meltdowns.
-                        </p>
-                      </div>
-                      <span className="text-[#fcc029] text-xl inline-block motion-safe:animate-[float_3s_ease-in-out_infinite] group-hover:text-2xl group-hover:animate-none group-hover:translate-x-2 group-hover:-translate-y-1 group-active:translate-x-3 group-active:scale-90 transition-all duration-300">
-                        →
-                      </span>
-                    </div>
-                  </Link>
-
-                  <Link
-                    href="/guides/relationships"
-                    className="block group p-4 md:p-5 bg-white border border-gray-200 rounded-lg hover:border-[#fcc029]/30 hover:shadow-lg active:scale-98 active:shadow-sm active:border-[#fcc029] transition-all duration-300"
-                  >
-                    <div className="flex items-start justify-between">
-                      <div className="space-y-2">
-                        <h3 className="font-display text-lg font-semibold text-gray-900 group-hover:text-[#fcc029] transition-colors">
-                          The Communication Guide
-                        </h3>
-                        <p className="text-gray-600 text-sm">
-                          Practical frameworks for better relationships, clearer
-                          communication, and navigating social situations as a
-                          neurodivergent person.
-                        </p>
-                      </div>
-                      <span className="text-[#fcc029] text-xl inline-block motion-safe:animate-[float_3s_ease-in-out_infinite] group-hover:text-2xl group-hover:animate-none group-hover:translate-x-2 group-hover:-translate-y-1 group-active:translate-x-3 group-active:scale-90 transition-all duration-300">
-                        →
-                      </span>
-                    </div>
-                  </Link>
-
-                  <Link
-                    href="/guides/work-strategies"
-                    className="block group p-4 md:p-5 bg-white border border-gray-200 rounded-lg hover:border-[#fcc029]/30 hover:shadow-lg active:scale-98 active:shadow-sm active:border-[#fcc029] transition-all duration-300"
-                  >
-                    <div className="flex items-start justify-between">
-                      <div className="space-y-2">
-                        <h3 className="font-display text-lg font-semibold text-gray-900 group-hover:text-[#fcc029] transition-colors">
-                          Work Strategies That Work
-                        </h3>
-                        <p className="text-gray-600 text-sm">
-                          How to leverage your neurodivergent strengths at work.
-                          From focus techniques to workplace accommodations that
-                          make a real difference.
-                        </p>
-                      </div>
-                      <span className="text-[#fcc029] text-xl inline-block motion-safe:animate-[float_3s_ease-in-out_infinite] group-hover:text-2xl group-hover:animate-none group-hover:translate-x-2 group-hover:-translate-y-1 group-active:translate-x-3 group-active:scale-90 transition-all duration-300">
-                        →
-                      </span>
-                    </div>
-                  </Link>
-                </div>
-              </div>
+              {/* Popular Guides - Now Dynamic from Strapi */}
+              <Suspense fallback={<GuidesLoading />}>
+                <MainGuides />
+              </Suspense>
 
               {/* Enhanced Newsletter Section */}
               <div className="mt-12 pt-12 border-t border-gray-100">
