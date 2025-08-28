@@ -70,9 +70,9 @@ async function fetchMainGuides(): Promise<MainGuide[]> {
 function GuidesLoading() {
   return (
     <div className="space-y-4">
-      <h2 className="font-display text-xl font-semibold text-gray-900">
+      <p className="font-display text-4xl font-bold text-gray-900">
         Popular guides
-      </h2>
+      </p>
       <div className="space-y-3">
         {[1, 2, 3, 4].map((i) => (
           <div
@@ -176,29 +176,25 @@ export default function Home() {
             <div className="space-y-8 md:space-y-16">
               {/* Main Content Section */}
               <div>
-                <h1 className="font-display text-[32px] leading-tight md:text-4xl lg:text-4xl font-bold text-gray-900">
-                  Practical frameworks & tools
-                  <span className="text-primary block mt-1">
-                    for neurodivergent minds
-                  </span>
+                <h1 className="font-display text-[32px] leading-tight md:text-4xl lg:text-5xl font-bold text-gray-900">
+                  The Autism & ADHD Perspective
+                  <span className="text-primary block mt-1"></span>
                 </h1>
                 <div className="mt-4 md:mt-6">
                   <p className="text-base md:text-lg text-gray-700">
-                    I write{" "}
-                    <span className="font-medium">Neurodivergent Notes</span> –
-                    a weekly letter with actionable strategies, productivity
-                    frameworks, and ways to work with (not against) your brain.
-                  </p>
-                  <p className="mt-2 text-gray-600">
-                    5,000+ neurodivergent individuals read it. You might find it
-                    helpful too.
+                    A weekly letter with practical frameworks, tools, and
+                    strategies for ADHD and Autism. It’s not theory. It’s what
+                    I’ve learned from my experiences, experiments, and mistakes
+                    I've madealong the way.
                   </p>
                 </div>
+
                 <div className="mt-6 md:mt-8">
-                  <NewsletterForm />
-                  <p className="mt-3 text-sm text-gray-500">
-                    2,132+ evidence-based strategies shared since 2020
+                  <p className="mb-2 text-lg font-bold">
+                    {" "}
+                    Join here it's free:
                   </p>
+                  <NewsletterForm />
                 </div>
               </div>
 
@@ -215,19 +211,17 @@ export default function Home() {
               {/* Enhanced Newsletter Section */}
               <div className="mt-12 pt-12 border-t border-gray-100">
                 <div className="md:text-center space-y-6">
-                  <h2 className="font-display text-[32px] leading-tight md:text-4xl font-bold text-gray-900">
+                  {/* <h2 className="font-display text-[32px] leading-tight md:text-4xl font-bold text-gray-900">
                     Join 5,000+ People Getting
                     <span className="block mt-1">
                       Weekly Neurodivergent Insights
                     </span>
-                  </h2>
+                  </h2> */}
 
                   <div className="md:bg-white md:rounded-xl md:border md:border-gray-200 md:p-6 mx-auto">
-                    <p className="text-lg md:text-xl font-medium text-gray-900 mb-6">
-                      18 Evidence-Based Strategies That Will Make You
-                      <span className="block mt-1">
-                        Thrive With Your Neurodivergent Brain
-                      </span>
+                    <p className="text-2xl md:text-2xl font-medium text-gray-900 mb-6">
+                      7 Newsletters that will make life with ADHD and Autism a
+                      little bit easier.
                     </p>
                     <div className="max-w-md mx-auto">
                       <NewsletterForm />
