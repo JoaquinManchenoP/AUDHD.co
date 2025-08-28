@@ -102,13 +102,128 @@ async function GuidePage({ params }: { params: Promise<{ id: string }> }) {
           {/* Guide body */}
           <div className="px-8 py-12">
             <div className="max-w-3xl prose prose-lg">
-              <div className="bg-blue-50 border-l-4 border-blue-400 p-6 rounded-r-lg">
-                <h3 className="text-lg font-semibold text-blue-900 mb-2">
-                  Guide Content
-                </h3>
-                <p className="text-blue-800">
-                  This guide is currently being developed. More content will be
-                  added soon!
+              {/* Main guide content */}
+              <div className="mb-12">
+                <div className="flex flex-col lg:flex-row gap-8 items-start">
+                  {/* Text content */}
+                  <div className="flex-1">
+                    <div className="prose prose-lg text-gray-700 leading-relaxed">
+                      <p className="mb-4">
+                        This comprehensive guide provides detailed strategies
+                        and frameworks designed specifically for neurodivergent
+                        minds. You'll discover practical approaches that work
+                        with your unique brain wiring, not against it.
+                      </p>
+                      <p className="mb-4">
+                        Each section includes step-by-step instructions,
+                        real-world examples, and actionable strategies you can
+                        implement immediately. Whether you're looking to improve
+                        focus, manage time better, or navigate social situations
+                        more effectively, this guide has you covered.
+                      </p>
+                      <p>
+                        The content is based on evidence-based research and real
+                        experiences from the neurodivergent community, ensuring
+                        that every strategy has been tested and proven
+                        effective.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Image section */}
+                  <div className="w-full lg:w-80 flex-shrink-0">
+                    <div className="bg-gray-100 rounded-lg overflow-hidden">
+                      {guide.guideImage ? (
+                        <div className="relative">
+                          <img
+                            src={guide.guideImage.url}
+                            alt={guide.guideTitle}
+                            className="w-full h-64 object-cover transition-opacity duration-300"
+                            onLoad={(e) => {
+                              e.currentTarget.style.opacity = "1";
+                              // Hide loading overlay when image loads
+                              const overlay = e.currentTarget
+                                .nextElementSibling as HTMLElement;
+                              if (overlay) {
+                                overlay.style.opacity = "0";
+                                setTimeout(() => {
+                                  overlay.style.display = "none";
+                                }, 300);
+                              }
+                            }}
+                            style={{ opacity: 0 }}
+                          />
+                          {/* Loading overlay - always visible initially */}
+                          <div
+                            className="absolute inset-0 bg-gray-100 flex items-center justify-center transition-opacity duration-300"
+                            style={{ opacity: 1 }}
+                          >
+                            <div className="text-center">
+                              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#fcc029] mx-auto mb-2"></div>
+                              <p className="text-sm text-gray-600">
+                                Loading image...
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="w-full h-64 bg-gray-200 rounded-lg animate-pulse flex items-center justify-center">
+                          <div className="text-center text-gray-500">
+                            {/* Simple loading dots */}
+                            <div className="flex space-x-2">
+                              <div
+                                className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                                style={{ animationDelay: "0ms" }}
+                              ></div>
+                              <div
+                                className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                                style={{ animationDelay: "150ms" }}
+                              ></div>
+                              <div
+                                className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                                style={{ animationDelay: "300ms" }}
+                              ></div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Email signup section */}
+              <div className="bg-gradient-to-r from-[#fcc029]/10 to-[#fcc029]/5 border border-[#fcc029]/20 rounded-xl p-6">
+                <div className="text-center mb-4">
+                  <h3 className="font-display text-lg font-semibold text-gray-900 mb-2">
+                    Get Full Access to This Guide
+                  </h3>
+                  <p className="text-sm text-gray-600">
+                    Enter your email to unlock the complete guide content
+                  </p>
+                </div>
+
+                <form className="max-w-sm mx-auto">
+                  <div className="flex gap-3">
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      required
+                      className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#fcc029] focus:border-[#fcc029] transition-colors placeholder-gray-400 text-sm"
+                      placeholder="your@email.com"
+                    />
+                    <button
+                      type="submit"
+                      className="bg-[#fcc029] text-white font-medium py-2 px-4 rounded-lg hover:bg-[#fcc029]/90 active:scale-98 transition-all duration-300 text-sm whitespace-nowrap"
+                    >
+                      Get Access
+                    </button>
+                  </div>
+                </form>
+
+                <p className="text-xs text-gray-500 text-center mt-3">
+                  We respect your privacy. Unsubscribe at any time.
                 </p>
               </div>
             </div>
