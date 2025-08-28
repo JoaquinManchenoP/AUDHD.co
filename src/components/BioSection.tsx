@@ -114,12 +114,12 @@ export default function BioSection() {
 
               <div className="space-y-3">
                 <p className="text-gray-700">
-                  I've spent 10+ years researching and testing ADHD & autism
-                  strategies. Now, I share what actually works.
-                </p>
-                <p className="text-gray-700">
-                  I've helped 5,000+ neurodivergent individuals transform their
-                  lives through practical frameworks and tools.
+                  Most of my life felt like a struggle.{" "}
+                  <span className="mt-1">
+                    Getting diagnosed with ADHD and Autism helped me understand
+                    why. Now I share what I’ve learned about working with my
+                    brain, hoping it helps others too.
+                  </span>
                 </p>
               </div>
             </div>
