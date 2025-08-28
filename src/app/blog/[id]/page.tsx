@@ -1,6 +1,6 @@
-import { motion } from "framer-motion";
 import Link from "next/link";
 import { Suspense } from "react";
+import BlogPostClient from "./BlogPostClient";
 
 interface BlogPost {
   id: number;
@@ -20,33 +20,31 @@ interface BlogPost {
   publishedAt: string;
 }
 
-// Function to fetch a single blog post by ID
-async function fetchBlogPost(id: string): Promise<BlogPost | null> {
+// Function to fetch a specific blog post by ID
+const fetchBlogPost = async (id: string): Promise<BlogPost | null> => {
   try {
-    console.log(`🔄 Fetching blog post with ID: ${id}`);
-
-    // Since the individual route isn't working, fetch all posts and filter
+    console.log("🔄 Fetching blog post with ID:", id);
+    
+    // Fetch all blog posts and filter by ID (workaround for 404 on direct findOne)
     const response = await fetch(
-      `http://localhost:1337/api/blog-posts?populate=*`,
+      "http://localhost:1337/api/blog-posts?populate=*",
       {
         cache: "no-store",
       }
     );
-
+    
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-
+    
     const data = await response.json();
     console.log("📡 All blog posts data:", data);
-
-    // Find the specific blog post by ID
-    const blogPost = data.data?.find(
-      (post: BlogPost) => post.id.toString() === id
-    );
-
+    
+    // Find the blog post with matching ID
+    const blogPost = data.data.find((post: any) => post.id.toString() === id);
+    
     if (blogPost) {
-      console.log("🎯 Found blog post:", blogPost);
+      console.log("✅ Found blog post:", blogPost);
       return blogPost;
     } else {
       console.log("❌ Blog post not found with ID:", id);
@@ -56,26 +54,36 @@ async function fetchBlogPost(id: string): Promise<BlogPost | null> {
     console.error("❌ Error fetching blog post:", error);
     return null;
   }
-}
+};
 
 // Loading component
 function BlogPostLoading() {
   return (
-    <div className="max-w-[1050px] mx-auto">
-      <div className="max-w-[650px] mx-auto px-4 py-8 md:py-16">
-        <div className="animate-pulse space-y-4">
-          <div className="h-8 bg-gray-200 rounded w-3/4"></div>
-          <div className="h-4 bg-gray-200 rounded w-full"></div>
-          <div className="h-4 bg-gray-200 rounded w-5/6"></div>
-          <div className="h-4 bg-gray-200 rounded w-4/6"></div>
+    <div className="relative">
+      <div className="max-w-[1050px] mx-auto">
+        <div className="max-w-[650px] mx-auto px-4 py-8 md:py-16">
+          <div className="space-y-4 md:space-y-6">
+            {[1, 2, 3].map((i) => (
+              <div
+                key={i}
+                className="p-4 md:p-5 bg-white border border-gray-200 rounded-lg animate-pulse"
+              >
+                <div className="space-y-2">
+                  <div className="h-6 bg-gray-200 rounded w-3/4"></div>
+                  <div className="h-4 bg-gray-200 rounded w-full"></div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
   );
 }
 
-// Main blog post component
-async function BlogPostContent({ id }: { id: string }) {
+// Main page component - server component
+export default async function BlogPostPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const blogPost = await fetchBlogPost(id);
 
   if (!blogPost) {
@@ -83,12 +91,7 @@ async function BlogPostContent({ id }: { id: string }) {
       <div className="max-w-[1050px] mx-auto">
         <div className="max-w-[650px] mx-auto px-4 py-8 md:py-16">
           <div className="text-center py-8">
-            <h1 className="text-2xl font-bold text-gray-900 mb-4">
-              Blog Post Not Found
-            </h1>
-            <p className="text-red-600 mb-4">
-              The blog post you're looking for doesn't exist.
-            </p>
+            <p className="text-red-600 mb-4">Blog post not found</p>
             <Link
               href="/blog"
               className="px-4 py-2 bg-[#fcc029] text-white rounded-lg hover:bg-[#fcc029]/90 transition-colors"
@@ -101,108 +104,9 @@ async function BlogPostContent({ id }: { id: string }) {
     );
   }
 
-  // Helper function to render blog post body content
-  const renderBlogPostBody = (body: any[]) => {
-    if (!body || !Array.isArray(body)) return null;
-
-    return body.map((block, index) => {
-      if (block.type === "paragraph") {
-        return (
-          <p key={index} className="mb-4 text-gray-700 leading-relaxed">
-            {block.children?.map((child: any, childIndex: number) => (
-              <span key={childIndex}>{child.text}</span>
-            ))}
-          </p>
-        );
-      }
-      return null;
-    });
-  };
-
-  return (
-    <div className="relative">
-      {/* Main Content */}
-      <div className="max-w-[1050px] mx-auto">
-        <div className="max-w-[650px] mx-auto px-4 py-8 md:py-16">
-          {/* Back to Blog Link */}
-          <div className="mb-8">
-            <Link
-              href="/blog"
-              className="inline-flex items-center text-[#fcc029] hover:text-[#fcc029]/80 transition-colors"
-            >
-              <svg
-                className="w-4 h-4 mr-2"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M15 19l-7-7 7-7"
-                />
-              </svg>
-              Back to Blog
-            </Link>
-          </div>
-
-          {/* Blog Post Header */}
-          <header className="mb-12">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-gray-900 mb-6">
-              {blogPost.blogPostTitle}
-            </h1>
-            <p className="text-xl text-gray-600 mb-4">
-              {blogPost.blogPostDescription}
-            </p>
-            <div className="text-sm text-gray-500">
-              Published on {new Date(blogPost.publishedAt).toLocaleDateString()}
-            </div>
-          </header>
-
-          {/* Blog Post Body */}
-          <article className="prose prose-lg max-w-none">
-            {renderBlogPostBody(blogPost.blogPostBody)}
-          </article>
-
-          {/* Back to Blog Button */}
-          <div className="mt-12 pt-8 border-t border-gray-200">
-            <Link
-              href="/blog"
-              className="inline-flex items-center px-6 py-3 bg-[#fcc029] text-white rounded-lg hover:bg-[#fcc029]/90 transition-colors"
-            >
-              <svg
-                className="w-4 h-4 mr-2"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M15 19l-7-7 7-7"
-                />
-              </svg>
-              Back to Blog
-            </Link>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-export default async function BlogPostPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = await params;
-
   return (
     <Suspense fallback={<BlogPostLoading />}>
-      <BlogPostContent id={id} />
+      <BlogPostClient blogPost={blogPost} />
     </Suspense>
   );
 }
