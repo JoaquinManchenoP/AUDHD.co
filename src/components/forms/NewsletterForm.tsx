@@ -12,16 +12,26 @@ export default function NewsletterForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatus("loading");
-
-    // TODO: Implement newsletter subscription logic
-    // This is where you'd integrate with your email service
+    console.log("[Newsletter] Submitted email:", email);
 
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const res = await fetch("/api/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        console.error("[Newsletter] Subscription failed:", err);
+        setStatus("error");
+        return;
+      }
+
       setStatus("success");
       setEmail("");
     } catch (error) {
+      console.error("[Newsletter] Unexpected error:", error);
       setStatus("error");
     }
   };

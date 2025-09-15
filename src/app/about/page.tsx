@@ -86,7 +86,8 @@ export default function AboutPage() {
         >
           <div className="bg-gradient-to-r from-[#fcc029]/10 via-[#fcc029]/5 to-transparent p-6">
             <p className="text-base font-medium text-gray-900 mb-3">
-              Want more insights, faster, straight to your inbox?
+              For more strategies and lessons on ADHD and Autism, subscribe to
+              my weekly newsletter.
             </p>
             <NewsletterForm />
           </div>
@@ -102,7 +103,8 @@ export default function AboutPage() {
           className="bg-gradient-to-r from-[#fcc029]/10 via-[#fcc029]/5 to-transparent p-4"
         >
           <p className="text-base font-medium text-gray-900 mb-3">
-            Want more insights, faster, straight to your inbox?
+            For more strategies and lessons on ADHD and Autism, subscribe to my
+            weekly newsletter.
           </p>
           <NewsletterForm />
         </motion.div>

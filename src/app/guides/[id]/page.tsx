@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import InlineEmailCapture from "@/components/forms/InlineEmailCapture";
 
 interface Guide {
   id: number;
@@ -203,24 +204,7 @@ async function GuidePage({ params }: { params: Promise<{ id: string }> }) {
                   </p>
                 </div>
 
-                <form className="max-w-sm mx-auto">
-                  <div className="flex gap-3">
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      required
-                      className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#fcc029] focus:border-[#fcc029] transition-colors placeholder-gray-400 text-sm"
-                      placeholder="your@email.com"
-                    />
-                    <button
-                      type="submit"
-                      className="bg-[#fcc029] text-white font-medium py-2 px-4 rounded-lg hover:bg-[#fcc029]/90 active:scale-98 transition-all duration-300 text-sm whitespace-nowrap"
-                    >
-                      Get Access
-                    </button>
-                  </div>
-                </form>
+                <InlineEmailCapture />
 
                 <p className="text-xs text-gray-500 text-center mt-3">
                   We respect your privacy. Unsubscribe at any time.

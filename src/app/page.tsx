@@ -217,16 +217,6 @@ export default function Home() {
                       Weekly Neurodivergent Insights
                     </span>
                   </h2> */}
-
-                  <div className="md:bg-white md:rounded-xl md:border md:border-gray-200 md:p-6 mx-auto">
-                    <p className="text-2xl md:text-2xl font-medium text-gray-900 mb-6">
-                      7 Newsletters that will make life with ADHD and Autism a
-                      little bit easier.
-                    </p>
-                    <div className="max-w-md mx-auto">
-                      <NewsletterForm />
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
