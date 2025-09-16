@@ -1,0 +1,12 @@
+{
+  "/api/subscribe/route": "app/api/subscribe/route.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js",
+  "/adhd/page": "app/adhd/page.js",
+  "/blog/[id]/page": "app/blog/[id]/page.js",
+  "/about/page": "app/about/page.js",
+  "/page": "app/page.js",
+  "/guides/[id]/page": "app/guides/[id]/page.js",
+  "/blog/page": "app/blog/page.js",
+  "/newsletter/page": "app/newsletter/page.js"
+}
