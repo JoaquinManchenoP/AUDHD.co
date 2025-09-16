@@ -2,6 +2,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import InlineEmailCapture from "@/components/forms/InlineEmailCapture";
 
+const STRAPI_URL = process.env.STRAPI_URL || process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
+
 interface Guide {
   id: number;
   documentId: string;
@@ -20,7 +22,7 @@ async function fetchGuide(id: string): Promise<Guide | null> {
     console.log("🔄 Fetching guide with ID:", id);
 
     // Fetch all guides and find the one with matching ID
-    const response = await fetch("http://localhost:1337/api/xones?populate=*", {
+    const response = await fetch(`${STRAPI_URL}/api/xones?populate=*`, {
       cache: "no-store",
     });
 
@@ -141,9 +143,9 @@ async function GuidePage({ params }: { params: Promise<{ id: string }> }) {
                             alt={guide.guideTitle}
                             className="w-full h-64 object-cover transition-opacity duration-300"
                             onLoad={(e) => {
-                              e.currentTarget.style.opacity = "1";
+                              (e.currentTarget as HTMLImageElement).style.opacity = "1";
                               // Hide loading overlay when image loads
-                              const overlay = e.currentTarget
+                              const overlay = (e.currentTarget as HTMLImageElement)
                                 .nextElementSibling as HTMLElement;
                               if (overlay) {
                                 overlay.style.opacity = "0";

@@ -4,6 +4,8 @@ import NewsletterForm from "@/components/forms/NewsletterForm";
 import BioSection from "@/components/BioSection";
 import { Suspense } from "react";
 
+const STRAPI_URL = process.env.STRAPI_URL || process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
+
 interface MainGuide {
   id: number;
   documentId: string;
@@ -13,7 +15,6 @@ interface MainGuide {
   order: number;
   createdAt: string;
   updatedAt: string;
-  publishedAt: string;
 }
 
 // Function to fetch main guides from Strapi
@@ -21,7 +22,7 @@ async function fetchMainGuides(): Promise<MainGuide[]> {
   try {
     console.log("🔄 Fetching xone guides from Strapi...");
     const response = await fetch(
-      "http://localhost:1337/api/xones?populate=*&sort=order:asc",
+      `${STRAPI_URL}/api/xones?populate=*&sort=order:asc`,
       {
         cache: "no-store",
       }
