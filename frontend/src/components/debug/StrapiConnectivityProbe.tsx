@@ -1,12 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 export default function StrapiConnectivityProbe() {
   const [status, setStatus] = useState<"idle" | "ok" | "fail">("idle");
   const publicUrl = process.env.NEXT_PUBLIC_STRAPI_URL || process.env.STRAPI_URL;
+  const hasRun = useRef(false);
 
   useEffect(() => {
+    // Prevent multiple executions
+    if (hasRun.current) return;
+    hasRun.current = true;
     const url = publicUrl?.replace(/\/$/, "");
     if (!url) {
       console.warn(
@@ -78,7 +82,7 @@ export default function StrapiConnectivityProbe() {
     };
 
     testConnectivity();
-  }, [publicUrl]);
+  }, []); // Empty dependency array to run only once
 
   if (status !== "fail") return null;
 

@@ -25,7 +25,7 @@ interface MainGuide {
 async function fetchMainGuides(): Promise<MainGuide[]> {
   try {
     console.log("🔄 Fetching content from Strapi collections...");
-    
+
     // Try multiple collections in order of preference
     const collections = ["blog-posts", "main-guides", "mainGuide", "blogPost"];
     let guides: any[] = [];
@@ -40,7 +40,7 @@ async function fetchMainGuides(): Promise<MainGuide[]> {
 
         if (response.ok) {
           const rawData = await response.json();
-          
+
           guides = rawData.data || [];
           usedCollection = collection;
           console.log(
