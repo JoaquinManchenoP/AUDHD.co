@@ -25,27 +25,37 @@ async function fetchGuide(id: string): Promise<Guide | null> {
   try {
     console.log("🔄 Fetching guide with ID:", id);
 
-    // Fetch all guides and find the one with matching ID
-    const response = await fetch(`${STRAPI_URL}/api/xones?populate=*`, {
-      next: { revalidate: 60 },
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+    // Try multiple collections to find the content
+    const collections = ['main-guides', 'blog-posts', 'mainGuide', 'blogPost'];
+    let response: Response | null = null;
+    
+    for (const collection of collections) {
+      try {
+        response = await fetch(`${STRAPI_URL}/api/${collection}?populate=*`, {
+          next: { revalidate: 60 },
+        });
+        if (response.ok) break;
+      } catch (error) {
+        console.log(`❌ Error fetching ${collection}:`, error);
+      }
+    }
+    
+    if (!response || !response.ok) {
+      throw new Error(`HTTP error! status: ${response?.status || 'No response'}`);
     }
 
     const data = await response.json();
     console.log("📡 All guides data:", data);
 
     if (data.data && Array.isArray(data.data)) {
-      // Find the guide with the matching ID
+      // Find the blog post with the matching ID
       const guide = data.data.find((g: any) => g.id.toString() === id);
 
       if (guide) {
-        console.log("✅ Found guide:", guide);
+        console.log("✅ Found blog post:", guide);
         return guide;
       } else {
-        console.log("❌ Guide not found with ID:", id);
+        console.log("❌ Blog post not found with ID:", id);
         return null;
       }
     }
@@ -98,10 +108,10 @@ async function GuidePage({ params }: { params: Promise<{ id: string }> }) {
           <div className="px-8 py-12 border-b border-gray-200">
             <div className="max-w-3xl">
               <h1 className="font-display text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-                {guide.guideTitle}
+                {guide.blogPostTitle || guide.mainGuideTitle || guide.title || guide.name || "Untitled Content"}
               </h1>
               <p className="text-xl text-gray-600 leading-relaxed">
-                {guide.guideDescription}
+                {guide.blogPostExcerpt || guide.mainGuideDescription || guide.description || guide.excerpt || "No description available"}
               </p>
             </div>
           </div>
@@ -140,11 +150,11 @@ async function GuidePage({ params }: { params: Promise<{ id: string }> }) {
                   {/* Image section */}
                   <div className="w-full lg:w-80 flex-shrink-0">
                     <div className="bg-gray-100 rounded-lg overflow-hidden">
-                      {guide.guideImage ? (
+                      {(guide.blogPostImage || guide.mainGuideImage || guide.image) ? (
                         <div className="relative">
                           <img
-                            src={guide.guideImage.url}
-                            alt={guide.guideTitle}
+                            src={(guide.blogPostImage || guide.mainGuideImage || guide.image)?.url}
+                            alt={guide.blogPostTitle || guide.mainGuideTitle || guide.title || "Content"}
                             className="w-full h-64 object-cover transition-opacity duration-300"
                             onLoad={(e) => {
                               (

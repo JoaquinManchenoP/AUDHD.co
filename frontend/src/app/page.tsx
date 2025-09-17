@@ -21,50 +21,67 @@ interface MainGuide {
   updatedAt: string;
 }
 
-// Function to fetch main guides from Strapi
+// Function to fetch content from Strapi collections
 async function fetchMainGuides(): Promise<MainGuide[]> {
   try {
-    console.log("🔄 Fetching xone guides from Strapi...");
-    const response = await fetch(
-      `${STRAPI_URL}/api/xones?populate=*&sort=order:asc`,
-      { next: { revalidate: 60 } }
-    );
+    console.log("🔄 Fetching content from Strapi collections...");
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
+    // Try multiple collections in order of preference
+    const collections = ["main-guides", "blog-posts", "mainGuide", "blogPost"];
+    let guides: any[] = [];
+    let usedCollection = "";
 
-    const rawData = await response.json();
-    console.log("📡 Raw Strapi response:", rawData);
-
-    // Extract the data array from the Strapi response
-    const guides = rawData.data || [];
-    console.log("📊 Extracted guides array:", guides);
-    console.log("🔢 Number of guides found:", guides.length);
-
-    // Log the structure of each guide if they exist
-    if (guides.length > 0) {
-      guides.forEach((guide: any, index: number) => {
-        console.log(`🔍 Guide ${index + 1} structure:`, guide);
-        console.log(`   - ID: ${guide.id}`);
-        console.log(`   - Title: ${guide.attributes?.title || "No title"}`);
-        console.log(
-          `   - Description: ${
-            guide.attributes?.description || "No description"
-          }`
+    for (const collection of collections) {
+      try {
+        console.log(`🔄 Trying collection: ${collection}`);
+        const response = await fetch(
+          `${STRAPI_URL}/api/${collection}?populate=*`,
+          { next: { revalidate: 60 } }
         );
-      });
-    } else {
-      console.log("⚠️ No guides found in the collection");
-      console.log(
-        "💡 Add some entries to the xone collection in Strapi to see data here"
-      );
+
+        if (response.ok) {
+          const rawData = await response.json();
+          console.log(`📡 Raw Strapi response for ${collection}:`, rawData);
+
+          guides = rawData.data || [];
+          usedCollection = collection;
+          console.log(
+            `✅ Successfully fetched from ${collection}:`,
+            guides.length,
+            "items"
+          );
+          break;
+        } else {
+          console.log(
+            `❌ Collection ${collection} not found or not accessible (${response.status})`
+          );
+        }
+      } catch (error) {
+        console.log(`❌ Error fetching ${collection}:`, error);
+      }
     }
 
-    // Return the processed guides array
+    if (guides.length === 0) {
+      console.log("⚠️ No content found in any collection");
+      console.log(
+        "💡 Add some entries to any collection in Strapi to see data here"
+      );
+      return [];
+    }
+
+    console.log(`📊 Using collection: ${usedCollection}`);
+    console.log(`🔢 Number of items found: ${guides.length}`);
+
+    // Log the structure of each item
+    guides.forEach((item: any, index: number) => {
+      console.log(`🔍 Item ${index + 1} structure:`, item);
+      console.log(`   - ID: ${item.id}`);
+      console.log(`   - Keys: ${Object.keys(item)}`);
+    });
+
     return guides;
   } catch (error) {
-    console.error("❌ Error fetching xone guides:", error);
+    console.error("❌ Error fetching content:", error);
     return [];
   }
 }
@@ -97,10 +114,29 @@ function GuidesLoading() {
 }
 
 // Helper function to safely get guide data regardless of structure
-function getGuideData(guide: MainGuide) {
+function getGuideData(guide: any) {
+  // Try to find title field dynamically
+  const titleField = Object.keys(guide).find(
+    (key) =>
+      key.toLowerCase().includes("title") ||
+      key.toLowerCase().includes("name") ||
+      key.toLowerCase().includes("heading")
+  );
+
+  // Try to find description field dynamically
+  const descriptionField = Object.keys(guide).find(
+    (key) =>
+      key.toLowerCase().includes("description") ||
+      key.toLowerCase().includes("excerpt") ||
+      key.toLowerCase().includes("summary") ||
+      key.toLowerCase().includes("content")
+  );
+
   return {
-    title: guide.guideTitle || "Untitled Guide",
-    description: guide.guideDescription || "No description available",
+    title: titleField ? guide[titleField] : "Untitled Content",
+    description: descriptionField
+      ? guide[descriptionField]
+      : "No description available",
   };
 }
 
@@ -132,12 +168,12 @@ async function MainGuides() {
       <div className="space-y-3">
         {guides.map((guide) => {
           // Add safety checks and debugging
-          console.log("🎯 Rendering guide:", guide);
-          console.log("   - Guide object:", guide);
-          console.log("   - Guide title:", guide.guideTitle);
-          console.log("   - Guide description:", guide.guideDescription);
-          console.log("   - Type of guide:", typeof guide);
-          console.log("   - Guide keys:", Object.keys(guide));
+          console.log("🎯 Rendering blog post:", guide);
+          console.log("   - Blog post object:", guide);
+          console.log("   - Blog post title:", guide.blogPostTitle);
+          console.log("   - Blog post excerpt:", guide.blogPostExcerpt);
+          console.log("   - Type of blog post:", typeof guide);
+          console.log("   - Blog post keys:", Object.keys(guide));
 
           // Use helper function to get data safely
           const guideData = getGuideData(guide);
@@ -145,7 +181,7 @@ async function MainGuides() {
           return (
             <Link
               key={guide.id}
-              href={`/guides/${guide.id}`}
+              href={`/blog/${guide.id}`}
               className="block group p-4 md:p-5 bg-white border border-gray-200 rounded-lg hover:border-[#fcc029]/30 hover:shadow-lg active:scale-98 active:shadow-sm active:border-[#fcc029] transition-all duration-300"
             >
               <div className="flex items-start justify-between">
