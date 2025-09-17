@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Comic_Neue, Fredoka } from "next/font/google";
 import "./globals.css";
 import Layout from "@/components/layout/Layout";
-import StrapiConnectivityProbe from "@/components/debug/StrapiConnectivityProbe";
+// import StrapiConnectivityProbe from "@/components/debug/StrapiConnectivityProbe";
 
 const comicNeue = Comic_Neue({
   subsets: ["latin"],
@@ -30,7 +30,7 @@ export default function RootLayout({
     <html lang="en" className={`${comicNeue.variable} ${fredoka.variable}`}>
       <body className="bg-white" suppressHydrationWarning={true}>
         <Layout>{children}</Layout>
-        <StrapiConnectivityProbe />
+        {/* <StrapiConnectivityProbe /> */}
       </body>
     </html>
   );
