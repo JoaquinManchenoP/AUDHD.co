@@ -19,6 +19,9 @@ async function fetchPost(id: string) {
           console.log(`✅ Found post in ${collection}:`, post);
           return post;
         }
+      } else if (res.status === 404) {
+        // Silently skip 404s to avoid console spam
+        continue;
       }
     } catch (error) {
       console.log(`❌ Error fetching ${collection}:`, error);

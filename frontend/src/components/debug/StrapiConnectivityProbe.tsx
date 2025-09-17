@@ -40,18 +40,28 @@ export default function StrapiConnectivityProbe() {
             /* noop */
           }
           
-          console.log("[Probe] Response from Strapi:", {
-            ok,
-            status: res.status,
-            contentType: ct,
-            body,
-            collection,
-          });
-          
           if (ok) {
+            console.log("[Probe] Response from Strapi:", {
+              ok,
+              status: res.status,
+              contentType: ct,
+              body,
+              collection,
+            });
             foundWorkingEndpoint = true;
             setStatus("ok");
             return;
+          } else if (res.status === 404) {
+            // Silently skip 404s to avoid console spam
+            continue;
+          } else {
+            console.log("[Probe] Response from Strapi:", {
+              ok,
+              status: res.status,
+              contentType: ct,
+              body,
+              collection,
+            });
           }
         } catch (err) {
           console.log(`[Probe] Collection ${collection} failed:`, err);

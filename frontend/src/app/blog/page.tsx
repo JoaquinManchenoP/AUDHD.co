@@ -26,6 +26,9 @@ async function fetchPosts(): Promise<BlogPost[]> {
           posts = data.data || [];
           console.log(`✅ Successfully fetched from ${collection}:`, posts.length, "posts");
           break;
+        } else if (res.status === 404) {
+          // Silently skip 404s to avoid console spam
+          continue;
         }
       } catch (error) {
         console.log(`❌ Error fetching ${collection}:`, error);

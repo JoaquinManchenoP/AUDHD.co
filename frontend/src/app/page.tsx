@@ -42,7 +42,7 @@ async function fetchMainGuides(): Promise<MainGuide[]> {
         if (response.ok) {
           const rawData = await response.json();
           console.log(`📡 Raw Strapi response for ${collection}:`, rawData);
-
+          
           guides = rawData.data || [];
           usedCollection = collection;
           console.log(
@@ -51,9 +51,12 @@ async function fetchMainGuides(): Promise<MainGuide[]> {
             "items"
           );
           break;
+        } else if (response.status === 404) {
+          // Silently skip 404s to avoid console spam
+          continue;
         } else {
           console.log(
-            `❌ Collection ${collection} not found or not accessible (${response.status})`
+            `❌ Collection ${collection} not accessible (${response.status})`
           );
         }
       } catch (error) {
