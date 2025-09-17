@@ -12,12 +12,30 @@ interface BlogPost {
 
 async function fetchPosts(): Promise<BlogPost[]> {
   try {
-    const res = await fetch(`${STRAPI_URL}/api/blog-posts?populate=*`, {
-      next: { revalidate: 60 },
-    });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
-    const posts = data.data || [];
+    // Try multiple collections in order of preference
+    const collections = ["main-guides", "blog-posts", "mainGuide", "blogPost"];
+    let posts: any[] = [];
+
+    for (const collection of collections) {
+      try {
+        const res = await fetch(`${STRAPI_URL}/api/${collection}?populate=*`, {
+          next: { revalidate: 60 },
+        });
+        if (res.ok) {
+          const data = await res.json();
+          posts = data.data || [];
+          console.log(`✅ Successfully fetched from ${collection}:`, posts.length, "posts");
+          break;
+        }
+      } catch (error) {
+        console.log(`❌ Error fetching ${collection}:`, error);
+      }
+    }
+
+    if (posts.length === 0) {
+      console.log("⚠️ No posts found in any collection");
+    }
+
     return posts;
   } catch (e) {
     console.error("Failed to fetch blog posts:", e);
@@ -35,12 +53,31 @@ export default async function BlogPage() {
         <p className="text-gray-600">No posts yet.</p>
       ) : (
         <div className="space-y-4">
-          {posts.map((post) => (
-            <Link key={post.id} href={`/blog/${post.id}`} className="block p-4 border rounded-lg hover:shadow">
-              <h3 className="font-semibold">{post.title}</h3>
-              <p className="text-gray-600 text-sm">{post.excerpt}</p>
-            </Link>
-          ))}
+          {posts.map((post) => {
+            // Dynamic field detection
+            const titleField = Object.keys(post).find(key => 
+              key.toLowerCase().includes('title') || 
+              key.toLowerCase().includes('name') ||
+              key.toLowerCase().includes('heading')
+            );
+            
+            const excerptField = Object.keys(post).find(key => 
+              key.toLowerCase().includes('description') || 
+              key.toLowerCase().includes('excerpt') ||
+              key.toLowerCase().includes('summary') ||
+              key.toLowerCase().includes('content')
+            );
+
+            const title = titleField ? post[titleField] : "Untitled Post";
+            const excerpt = excerptField ? post[excerptField] : "No description available";
+
+            return (
+              <Link key={post.id} href={`/blog/${post.id}`} className="block p-4 border rounded-lg hover:shadow">
+                <h3 className="font-semibold">{title}</h3>
+                <p className="text-gray-600 text-sm">{excerpt}</p>
+              </Link>
+            );
+          })}
         </div>
       )}
     </div>
