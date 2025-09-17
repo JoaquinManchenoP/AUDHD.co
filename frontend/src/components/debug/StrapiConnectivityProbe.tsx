@@ -16,37 +16,58 @@ export default function StrapiConnectivityProbe() {
       return;
     }
 
-    const testEndpoint = `${url}/api/xones?pagination[pageSize]=1`;
-    console.log("[Probe] Testing Strapi connectivity:", {
-      NEXT_PUBLIC_STRAPI_URL: publicUrl,
-      testEndpoint,
-    });
+    // Try multiple collections to test connectivity
+    const collections = ["main-guides", "blog-posts", "mainGuide", "blogPost"];
+    let testEndpoint = "";
+    let foundWorkingEndpoint = false;
 
-    fetch(testEndpoint, { mode: "cors" })
-      .then(async (res) => {
-        const ok = res.ok;
-        const ct = res.headers.get("content-type");
-        let body: unknown = undefined;
-        try {
-          body = await res.json();
-        } catch {
-          /* noop */
-        }
-        console.log("[Probe] Response from Strapi:", {
-          ok,
-          status: res.status,
-          contentType: ct,
-          body,
+    const testConnectivity = async () => {
+      for (const collection of collections) {
+        testEndpoint = `${url}/api/${collection}?pagination[pageSize]=1`;
+        console.log("[Probe] Testing Strapi connectivity:", {
+          NEXT_PUBLIC_STRAPI_URL: publicUrl,
+          testEndpoint,
         });
-        setStatus(ok ? "ok" : "fail");
-      })
-      .catch((err) => {
-        console.error("[Probe] Failed to reach Strapi (network/CORS):", err);
+
+        try {
+          const res = await fetch(testEndpoint, { mode: "cors" });
+          const ok = res.ok;
+          const ct = res.headers.get("content-type");
+          let body: unknown = undefined;
+          try {
+            body = await res.json();
+          } catch {
+            /* noop */
+          }
+          
+          console.log("[Probe] Response from Strapi:", {
+            ok,
+            status: res.status,
+            contentType: ct,
+            body,
+            collection,
+          });
+          
+          if (ok) {
+            foundWorkingEndpoint = true;
+            setStatus("ok");
+            return;
+          }
+        } catch (err) {
+          console.log(`[Probe] Collection ${collection} failed:`, err);
+        }
+      }
+      
+      if (!foundWorkingEndpoint) {
+        console.error("[Probe] Failed to reach any Strapi collection (network/CORS):");
         console.warn(
           "[Probe] Common fixes: 1) Set NEXT_PUBLIC_STRAPI_URL on Vercel, 2) Allow your Vercel domain in Strapi CORS (backend/config/middlewares.ts), 3) Ensure Public role has read permissions and entries are published."
         );
         setStatus("fail");
-      });
+      }
+    };
+
+    testConnectivity();
   }, [publicUrl]);
 
   if (status !== "fail") return null;
