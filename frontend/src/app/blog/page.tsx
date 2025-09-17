@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 
-const STRAPI_URL = process.env.STRAPI_URL || process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
+const STRAPI_URL = (process.env.STRAPI_URL || process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337").replace(/\/+$/, "");
 
 interface BlogPost {
   id: number;
@@ -13,7 +13,7 @@ interface BlogPost {
 async function fetchPosts(): Promise<BlogPost[]> {
   try {
     const res = await fetch(`${STRAPI_URL}/api/blog-posts?populate=*`, {
-      cache: "no-store",
+      next: { revalidate: 60 },
     });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
