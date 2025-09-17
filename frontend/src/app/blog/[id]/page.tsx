@@ -4,13 +4,28 @@ import BlogPostClient from "./BlogPostClient";
 const STRAPI_URL = (process.env.STRAPI_URL || process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337").replace(/\/+$/, "");
 
 async function fetchPost(id: string) {
-  const res = await fetch(`${STRAPI_URL}/api/blog-posts?populate=*`, {
-    next: { revalidate: 60 },
-  });
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  const data = await res.json();
-  const post = (data.data || []).find((p: any) => p.id.toString() === id);
-  return post || null;
+  // Try multiple collections to find the post
+  const collections = ["main-guides", "blog-posts", "mainGuide", "blogPost"];
+  
+  for (const collection of collections) {
+    try {
+      const res = await fetch(`${STRAPI_URL}/api/${collection}?populate=*`, {
+        next: { revalidate: 60 },
+      });
+      if (res.ok) {
+        const data = await res.json();
+        const post = (data.data || []).find((p: any) => p.id.toString() === id);
+        if (post) {
+          console.log(`✅ Found post in ${collection}:`, post);
+          return post;
+        }
+      }
+    } catch (error) {
+      console.log(`❌ Error fetching ${collection}:`, error);
+    }
+  }
+  
+  return null;
 }
 
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
