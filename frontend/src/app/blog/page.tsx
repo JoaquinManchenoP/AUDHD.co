@@ -45,11 +45,15 @@ async function fetchPosts(): Promise<BlogPost[]> {
 }
 
 export default async function BlogPage() {
+  console.log("🚀 Blog page component is rendering...");
   const posts = await fetchPosts();
 
   return (
     <div className="max-w-[1000px] mx-auto px-4 py-8">
       <h1 className="font-display text-3xl font-bold mb-6">Blog</h1>
+      <div className="mb-4 p-2 bg-green-100 text-green-800 rounded text-sm">
+        ✅ Blog page loaded successfully! Found {posts.length} posts.
+      </div>
       {posts.length === 0 ? (
         <p className="text-gray-600">No posts yet.</p>
       ) : (
