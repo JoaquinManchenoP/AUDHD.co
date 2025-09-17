@@ -13,7 +13,7 @@ interface BlogPost {
 async function fetchPosts(): Promise<BlogPost[]> {
   try {
     // Try multiple collections in order of preference
-    const collections = ["main-guides", "blog-posts", "mainGuide", "blogPost"];
+    const collections = ["blog-posts", "main-guides", "mainGuide", "blogPost"];
     let posts: any[] = [];
 
     for (const collection of collections) {

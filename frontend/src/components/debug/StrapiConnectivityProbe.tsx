@@ -17,7 +17,7 @@ export default function StrapiConnectivityProbe() {
     }
 
     // Try multiple collections to test connectivity
-    const collections = ["main-guides", "blog-posts", "mainGuide", "blogPost"];
+    const collections = ["blog-posts", "main-guides", "mainGuide", "blogPost"];
     let testEndpoint = "";
     let foundWorkingEndpoint = false;
 

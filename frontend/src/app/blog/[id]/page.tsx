@@ -5,7 +5,7 @@ const STRAPI_URL = (process.env.STRAPI_URL || process.env.NEXT_PUBLIC_STRAPI_URL
 
 async function fetchPost(id: string) {
   // Try multiple collections to find the post
-  const collections = ["main-guides", "blog-posts", "mainGuide", "blogPost"];
+  const collections = ["blog-posts", "main-guides", "mainGuide", "blogPost"];
   
   for (const collection of collections) {
     try {

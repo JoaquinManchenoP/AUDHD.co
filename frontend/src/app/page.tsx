@@ -25,15 +25,14 @@ interface MainGuide {
 async function fetchMainGuides(): Promise<MainGuide[]> {
   try {
     console.log("🔄 Fetching content from Strapi collections...");
-
+    
     // Try multiple collections in order of preference
-    const collections = ["main-guides", "blog-posts", "mainGuide", "blogPost"];
+    const collections = ["blog-posts", "main-guides", "mainGuide", "blogPost"];
     let guides: any[] = [];
     let usedCollection = "";
 
     for (const collection of collections) {
       try {
-        console.log(`🔄 Trying collection: ${collection}`);
         const response = await fetch(
           `${STRAPI_URL}/api/${collection}?populate=*`,
           { next: { revalidate: 60 } }
@@ -41,7 +40,6 @@ async function fetchMainGuides(): Promise<MainGuide[]> {
 
         if (response.ok) {
           const rawData = await response.json();
-          console.log(`📡 Raw Strapi response for ${collection}:`, rawData);
           
           guides = rawData.data || [];
           usedCollection = collection;
@@ -66,21 +64,8 @@ async function fetchMainGuides(): Promise<MainGuide[]> {
 
     if (guides.length === 0) {
       console.log("⚠️ No content found in any collection");
-      console.log(
-        "💡 Add some entries to any collection in Strapi to see data here"
-      );
       return [];
     }
-
-    console.log(`📊 Using collection: ${usedCollection}`);
-    console.log(`🔢 Number of items found: ${guides.length}`);
-
-    // Log the structure of each item
-    guides.forEach((item: any, index: number) => {
-      console.log(`🔍 Item ${index + 1} structure:`, item);
-      console.log(`   - ID: ${item.id}`);
-      console.log(`   - Keys: ${Object.keys(item)}`);
-    });
 
     return guides;
   } catch (error) {
