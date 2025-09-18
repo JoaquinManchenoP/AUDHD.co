@@ -169,7 +169,10 @@ async function MainGuides() {
           console.log("🎯 Rendering guide:", guide);
           console.log("   - Guide object:", guide);
           console.log("   - Guide title:", guide.guideTitle);
-          console.log("   - Guide card description:", guide.guideCardDescription);
+          console.log(
+            "   - Guide card description:",
+            guide.guideCardDescription
+          );
           console.log("   - Type of guide:", typeof guide);
           console.log("   - Guide keys:", Object.keys(guide));
 
@@ -177,8 +180,9 @@ async function MainGuides() {
           const guideData = getGuideData(guide);
 
           return (
-            <div
+            <Link
               key={guide.id}
+              href={`/guides/${guide.id}`}
               className="block group p-4 md:p-5 bg-white border border-gray-200 rounded-lg hover:border-[#fcc029]/30 hover:shadow-lg active:scale-98 active:shadow-sm active:border-[#fcc029] transition-all duration-300"
             >
               <div className="flex items-start justify-between">
@@ -194,7 +198,7 @@ async function MainGuides() {
                   →
                 </span>
               </div>
-            </div>
+            </Link>
           );
         })}
       </div>
