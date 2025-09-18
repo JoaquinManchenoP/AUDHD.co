@@ -207,7 +207,34 @@ async function MainGuides() {
   );
 }
 
-export default function Home() {
+// On-load server-side check for adhdGuide collection
+async function checkAdhdGuideAccess() {
+  const candidates = ["adhd-guides", "adhdGuide", "adhdGuides"]; // try common slugs
+  for (const slug of candidates) {
+    try {
+      const res = await fetch(
+        `${STRAPI_URL}/api/${slug}?pagination[pageSize]=1&pagination[withCount]=true`,
+        { next: { revalidate: 60 } }
+      );
+      if (res.ok) {
+        const data = await res.json();
+        const count = data?.meta?.pagination?.total ?? (Array.isArray(data?.data) ? data.data.length : 0);
+        console.log(`✅ adhdGuide access OK via '${slug}'. Total items: ${count}`);
+        return { ok: true, slug, count } as const;
+      }
+      if (res.status === 404) continue;
+      console.log(`ℹ️ '${slug}' responded with status ${res.status}`);
+    } catch (err) {
+      console.log(`❌ Error probing '${slug}':`, err);
+    }
+  }
+  console.log("⚠️ adhdGuide collection not found (tried: adhd-guides, adhdGuide, adhdGuides)");
+  return { ok: false } as const;
+}
+
+export default async function Home() {
+  // Server-side page-load check
+  await checkAdhdGuideAccess();
   return (
     <div className="min-h-screen">
       <div className="max-w-[1000px] mx-auto px-4 py-8 md:py-12">

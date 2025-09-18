@@ -1,0 +1,36 @@
+{
+  "kind": "collectionType",
+  "collectionName": "adhd_guides",
+  "info": {
+    "singularName": "adhd-guide",
+    "pluralName": "adhd-guides",
+    "displayName": "adhdGuide"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "guideTitle": {
+      "type": "string",
+      "required": true
+    },
+    "guideCardDescription": {
+      "type": "string",
+      "required": true
+    },
+    "guideFullDescription": {
+      "type": "string"
+    },
+    "Image": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    }
+  }
+}

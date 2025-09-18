@@ -410,6 +410,37 @@ export interface AdminUser extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiAdhdGuideAdhdGuide extends Struct.CollectionTypeSchema {
+  collectionName: 'adhd_guides';
+  info: {
+    displayName: 'adhdGuide';
+    pluralName: 'adhd-guides';
+    singularName: 'adhd-guide';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    guideCardDescription: Schema.Attribute.String & Schema.Attribute.Required;
+    guideFullDescription: Schema.Attribute.String;
+    guideTitle: Schema.Attribute.String & Schema.Attribute.Required;
+    Image: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::adhd-guide.adhd-guide'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiBlogPostBlogPost extends Struct.CollectionTypeSchema {
   collectionName: 'blog_posts';
   info: {
@@ -996,6 +1027,7 @@ declare module '@strapi/strapi' {
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
+      'api::adhd-guide.adhd-guide': ApiAdhdGuideAdhdGuide;
       'api::blog-post.blog-post': ApiBlogPostBlogPost;
       'api::xone.xone': ApiXoneXone;
       'plugin::content-releases.release': PluginContentReleasesRelease;
