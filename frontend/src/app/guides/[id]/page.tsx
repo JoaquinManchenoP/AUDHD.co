@@ -32,22 +32,55 @@ export default async function GuidePage({
   const title = guide.guideTitle || "Untitled Guide";
   const description =
     guide.guideFullDescription || guide.guideCardDescription || "";
+  const imageUrl =
+    guide?.guideImage?.url || guide?.image?.url || guide?.blogPostImage?.url || "";
 
   return (
-    <div className="max-w-[1050px] mx-auto">
-      <div className="max-w-[650px] mx-auto px-4 py-8 md:py-16 flex flex-col items-center">
-        {/* Title */}
-        <div className="relative mb-12 md:mb-16 w-full text-center">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold">
-            {title}
-          </h1>
-          <div className="absolute left-1/2 -translate-x-1/2 bottom-0 transform translate-y-2">
-            <div className="h-2 md:h-3 bg-[#fcc029] rounded-sm w-[220px] transform -rotate-1 blur-[0.5px]"></div>
+    <div className="max-w-[1100px] mx-auto px-4 py-10 md:py-16">
+      {/* Hero section */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+        {/* Left: Cover/Image */}
+        <div className="flex justify-center md:justify-start">
+          <div className="bg-gray-50 border border-gray-200 rounded-xl overflow-hidden shadow-sm w-full max-w-md">
+            {imageUrl ? (
+              <img
+                src={imageUrl}
+                alt={title}
+                className="w-full h-auto"
+              />
+            ) : (
+              <div className="aspect-[3/4] w-full bg-gray-100 animate-pulse" />
+            )}
           </div>
         </div>
 
-        {/* Content */}
-        <div className="space-y-6 text-lg max-w-[650px]">
+        {/* Right: Title, subtitle, form */}
+        <div>
+          <h1 className="font-display text-4xl md:text-5xl font-bold leading-tight text-gray-900">
+            {title}
+            <span className="block bg-[#fcc029]/50 -mx-1 px-1 w-fit mt-2 text-gray-900">
+              turn visitors into progress
+            </span>
+          </h1>
+
+          <p className="mt-6 text-gray-700 text-lg">
+            {guide.guideSubtitle || "Practical frameworks and step-by-step systems that actually work."}
+          </p>
+
+          {/* Inline subscribe form (reuse global styles) */}
+          <div className="mt-6">
+            {/* Keep consistent with project style: use NewsletterForm */}
+            {/* @ts-expect-error Server Component embedding a client component */}
+            {(await import("@/components/forms/NewsletterForm")).default({})}
+          </div>
+
+          <p className="mt-2 text-sm text-gray-500">Free for now, cancel anytime.</p>
+        </div>
+      </div>
+
+      {/* Body */}
+      <div className="mt-12 md:mt-16 max-w-3xl">
+        <div className="prose prose-lg max-w-none text-gray-800">
           <p className="whitespace-pre-wrap">{description}</p>
         </div>
       </div>
