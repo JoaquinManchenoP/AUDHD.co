@@ -446,7 +446,7 @@ export interface ApiBlogPostBlogPost extends Struct.CollectionTypeSchema {
 export interface ApiXoneXone extends Struct.CollectionTypeSchema {
   collectionName: 'xones';
   info: {
-    displayName: 'mainGuide';
+    displayName: 'mainPageGuides';
     pluralName: 'xones';
     singularName: 'xone';
   };
@@ -457,6 +457,7 @@ export interface ApiXoneXone extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    guideCardDescription: Schema.Attribute.String & Schema.Attribute.Required;
     guideDescription: Schema.Attribute.Text &
       Schema.Attribute.Required &
       Schema.Attribute.SetMinMaxLength<{

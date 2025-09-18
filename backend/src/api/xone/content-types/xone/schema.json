@@ -4,7 +4,7 @@
   "info": {
     "singularName": "xone",
     "pluralName": "xones",
-    "displayName": "mainGuide"
+    "displayName": "mainPageGuides"
   },
   "options": {
     "draftAndPublish": true
@@ -37,6 +37,10 @@
       "type": "integer",
       "default": 0,
       "unique": true
+    },
+    "guideCardDescription": {
+      "type": "string",
+      "required": true
     }
   }
 }
