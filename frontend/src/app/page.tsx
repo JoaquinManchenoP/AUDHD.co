@@ -15,6 +15,7 @@ interface MainGuide {
   documentId: string;
   guideTitle: string;
   guideDescription: string;
+  guideCardDescription?: string;
   guideImage?: any;
   order: number;
   createdAt: string;
@@ -26,8 +27,12 @@ async function fetchMainGuides(): Promise<MainGuide[]> {
   try {
     console.log("🔄 Fetching content from Strapi collections...");
 
-    // Try multiple collections in order of preference
-    const collections = ["blog-posts", "main-guides", "mainGuide", "blogPost"];
+    // Prefer the dedicated MainPageGuides collection
+    const collections = [
+      "main-page-guides",
+      "MainPageGuides",
+      "mainPageGuides",
+    ]; // try common variants
     let guides: any[] = [];
     let usedCollection = "";
 
@@ -41,7 +46,11 @@ async function fetchMainGuides(): Promise<MainGuide[]> {
         if (response.ok) {
           const rawData = await response.json();
 
-          guides = rawData.data || [];
+          // Normalize Strapi v4 response: items may be in attributes
+          const items = rawData.data || [];
+          guides = items.map((item: any) =>
+            item?.attributes ? { id: item.id, ...item.attributes } : item
+          );
           usedCollection = collection;
           console.log(
             `✅ Successfully fetched from ${collection}:`,
@@ -112,13 +121,16 @@ function getGuideData(guide: any) {
   );
 
   // Try to find description field dynamically
-  const descriptionField = Object.keys(guide).find(
-    (key) =>
-      key.toLowerCase().includes("description") ||
-      key.toLowerCase().includes("excerpt") ||
-      key.toLowerCase().includes("summary") ||
-      key.toLowerCase().includes("content")
-  );
+  const descriptionField =
+    Object.keys(guide).find((key) => key === "guideCardDescription") ||
+    Object.keys(guide).find(
+      (key) =>
+        key.toLowerCase().includes("carddescription") ||
+        key.toLowerCase().includes("description") ||
+        key.toLowerCase().includes("excerpt") ||
+        key.toLowerCase().includes("summary") ||
+        key.toLowerCase().includes("content")
+    );
 
   return {
     title: titleField ? guide[titleField] : "Untitled Content",
@@ -158,8 +170,11 @@ async function MainGuides() {
           // Add safety checks and debugging
           console.log("🎯 Rendering blog post:", guide);
           console.log("   - Blog post object:", guide);
-          console.log("   - Blog post title:", guide.blogPostTitle);
-          console.log("   - Blog post excerpt:", guide.blogPostExcerpt);
+          console.log("   - Guide title:", guide.guideTitle);
+          console.log(
+            "   - Guide card description:",
+            guide.guideCardDescription
+          );
           console.log("   - Type of blog post:", typeof guide);
           console.log("   - Blog post keys:", Object.keys(guide));
 
@@ -167,25 +182,24 @@ async function MainGuides() {
           const guideData = getGuideData(guide);
 
           return (
-            <Link
+            <div
               key={guide.id}
-              href={`/blog/${guide.id}`}
               className="block group p-4 md:p-5 bg-white border border-gray-200 rounded-lg hover:border-[#fcc029]/30 hover:shadow-lg active:scale-98 active:shadow-sm active:border-[#fcc029] transition-all duration-300"
             >
               <div className="flex items-start justify-between">
                 <div className="space-y-2">
                   <h3 className="font-display text-lg font-semibold text-gray-900 group-hover:text-[#fcc029] transition-colors">
-                    {guideData.title}
+                    {guide.guideTitle || guideData.title}
                   </h3>
                   <p className="text-gray-600 text-sm">
-                    {guideData.description}
+                    {guide.guideCardDescription || guideData.description}
                   </p>
                 </div>
                 <span className="text-[#fcc029] text-xl inline-block motion-safe:animate-[float_3s_ease-in-out_infinite] group-hover:text-2xl group-hover:animate-none group-hover:translate-x-2 group-hover:-translate-y-1 group-active:translate-x-3 group-active:scale-90 transition-all duration-300">
                   →
                 </span>
               </div>
-            </Link>
+            </div>
           );
         })}
       </div>
