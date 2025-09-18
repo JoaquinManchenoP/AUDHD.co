@@ -27,11 +27,9 @@ async function fetchMainGuides(): Promise<MainGuide[]> {
   try {
     console.log("🔄 Fetching content from Strapi collections...");
 
-    // Prefer the dedicated MainPageGuides collection (try likely REST slugs)
+    // Prefer the ADHD Guides collection
     const collections = [
-      "mainPageGuides", // exact name provided
-      "main-page-guides", // Strapi auto REST slug (kebab-case)
-      "MainPageGuides", // fallback variant
+      "adhd-guides", // Strapi REST slug for API ID (plural)
     ];
     let guides: any[] = [];
     let usedCollection = "";
@@ -168,15 +166,12 @@ async function MainGuides() {
       <div className="space-y-3">
         {guides.map((guide) => {
           // Add safety checks and debugging
-          console.log("🎯 Rendering blog post:", guide);
-          console.log("   - Blog post object:", guide);
+          console.log("🎯 Rendering guide:", guide);
+          console.log("   - Guide object:", guide);
           console.log("   - Guide title:", guide.guideTitle);
-          console.log(
-            "   - Guide card description:",
-            guide.guideCardDescription
-          );
-          console.log("   - Type of blog post:", typeof guide);
-          console.log("   - Blog post keys:", Object.keys(guide));
+          console.log("   - Guide card description:", guide.guideCardDescription);
+          console.log("   - Type of guide:", typeof guide);
+          console.log("   - Guide keys:", Object.keys(guide));
 
           // Use helper function to get data safely
           const guideData = getGuideData(guide);
@@ -209,26 +204,44 @@ async function MainGuides() {
 
 // On-load server-side check for adhdGuide collection
 async function checkAdhdGuideAccess() {
+  console.log(`🔍 Checking adhdGuide access at: ${STRAPI_URL}`);
   const candidates = ["adhd-guides", "adhdGuide", "adhdGuides"]; // try common slugs
   for (const slug of candidates) {
+    const url = `${STRAPI_URL}/api/${slug}?pagination[pageSize]=1&pagination[withCount]=true`;
+    console.log(`🔍 Trying: ${url}`);
     try {
-      const res = await fetch(
-        `${STRAPI_URL}/api/${slug}?pagination[pageSize]=1&pagination[withCount]=true`,
-        { next: { revalidate: 60 } }
+      const res = await fetch(url, { next: { revalidate: 60 } });
+      console.log(
+        `📡 Response for '${slug}': status ${res.status}, ok: ${res.ok}`
       );
+
       if (res.ok) {
         const data = await res.json();
-        const count = data?.meta?.pagination?.total ?? (Array.isArray(data?.data) ? data.data.length : 0);
-        console.log(`✅ adhdGuide access OK via '${slug}'. Total items: ${count}`);
+        console.log(
+          `📊 Raw response for '${slug}':`,
+          JSON.stringify(data, null, 2)
+        );
+        const count =
+          data?.meta?.pagination?.total ??
+          (Array.isArray(data?.data) ? data.data.length : 0);
+        console.log(
+          `✅ adhdGuide access OK via '${slug}'. Total items: ${count}`
+        );
         return { ok: true, slug, count } as const;
       }
+
+      // Log response body for non-200 statuses
+      const errorText = await res.text();
+      console.log(`❌ '${slug}' status ${res.status}, body:`, errorText);
+
       if (res.status === 404) continue;
-      console.log(`ℹ️ '${slug}' responded with status ${res.status}`);
     } catch (err) {
       console.log(`❌ Error probing '${slug}':`, err);
     }
   }
-  console.log("⚠️ adhdGuide collection not found (tried: adhd-guides, adhdGuide, adhdGuides)");
+  console.log(
+    "⚠️ adhdGuide collection not found (tried: adhd-guides, adhdGuide, adhdGuides)"
+  );
   return { ok: false } as const;
 }
 
