@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import NewsletterForm from "@/components/forms/NewsletterForm";
 
 const STRAPI_URL = (
   process.env.STRAPI_URL ||
@@ -67,11 +68,9 @@ export default async function GuidePage({
             {guide.guideSubtitle || "Practical frameworks and step-by-step systems that actually work."}
           </p>
 
-          {/* Inline subscribe form (reuse global styles) */}
+          {/* Inline subscribe form (client component) */}
           <div className="mt-6">
-            {/* Keep consistent with project style: use NewsletterForm */}
-            {/* @ts-expect-error Server Component embedding a client component */}
-            {(await import("@/components/forms/NewsletterForm")).default({})}
+            <NewsletterForm />
           </div>
 
           <p className="mt-2 text-sm text-gray-500">Free for now, cancel anytime.</p>
