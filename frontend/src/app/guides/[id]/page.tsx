@@ -8,17 +8,54 @@ const STRAPI_URL = (
 ).replace(/\/+$/, "");
 
 async function fetchGuide(id: string) {
-  // Fetch from adhd-guides and normalize
-  const res = await fetch(`${STRAPI_URL}/api/adhd-guides?populate=*`, {
-    next: { revalidate: 60 },
-  });
-  if (!res.ok) return null;
-  const data = await res.json();
-  const items = (data?.data ?? []).map((item: any) =>
-    item?.attributes ? { id: item.id, ...item.attributes } : item
-  );
-  const guide = items.find((g: any) => g.id?.toString() === id);
-  return guide ?? null;
+  // Try direct by-id endpoint first
+  const byIdUrl = `${STRAPI_URL}/api/adhd-guides/${id}?populate=*`;
+  try {
+    const res = await fetch(byIdUrl, { next: { revalidate: 60 } });
+    console.log(`[GuidePage] GET ${byIdUrl} → ${res.status}`);
+    if (res.ok) {
+      const data = await res.json();
+      console.log(
+        "[GuidePage] Raw response (byId)",
+        JSON.stringify(data, null, 2)
+      );
+      const item = data?.data;
+      if (item) {
+        const normalized = item?.attributes
+          ? { id: item.id, ...item.attributes }
+          : item;
+        console.log("[GuidePage] Normalized (byId)", normalized);
+        return normalized;
+      }
+    }
+  } catch (e) {
+    console.log("[GuidePage] Error byId fetch:", e);
+  }
+
+  // Fallback: collection query with id filter (works with find permission)
+  const filterUrl = `${STRAPI_URL}/api/adhd-guides?filters[id][$eq]=${encodeURIComponent(
+    id
+  )}&populate=*`;
+  try {
+    const res = await fetch(filterUrl, { next: { revalidate: 60 } });
+    console.log(`[GuidePage] GET ${filterUrl} → ${res.status}`);
+    if (!res.ok) return null;
+    const data = await res.json();
+    console.log(
+      "[GuidePage] Raw response (filter)",
+      JSON.stringify(data, null, 2)
+    );
+    const item = Array.isArray(data?.data) ? data.data[0] : null;
+    if (!item) return null;
+    const normalized = item?.attributes
+      ? { id: item.id, ...item.attributes }
+      : item;
+    console.log("[GuidePage] Normalized (filter)", normalized);
+    return normalized;
+  } catch (e) {
+    console.log("[GuidePage] Error filter fetch:", e);
+    return null;
+  }
 }
 
 export default async function GuidePage({
@@ -30,27 +67,65 @@ export default async function GuidePage({
   const guide = await fetchGuide(id);
   if (!guide) notFound();
 
-  const title = guide.guideTitle || "Untitled Guide";
+  // Safely extract plain text from possibly-changed field types
+  const extractText = (value: any): string => {
+    if (value == null) return "";
+    if (typeof value === "string") return value;
+    // Strapi rich text (array of nodes)
+    if (Array.isArray(value)) {
+      try {
+        return value
+          .map((node) => {
+            if (!node) return "";
+            if (typeof node === "string") return node;
+            const children = (node.children || []) as any[];
+            return children.map((c) => c?.text ?? "").join("");
+          })
+          .join("\n\n");
+      } catch {
+        return JSON.stringify(value);
+      }
+    }
+    // Attempt to stringify objects safely
+    try {
+      // Some editors store text at value.text
+      if (typeof value.text === "string") return value.text;
+      return JSON.stringify(value);
+    } catch {
+      return String(value);
+    }
+  };
+
+  console.log("[GuidePage] Guide payload keys:", Object.keys(guide));
+  console.log("[GuidePage] Guide object:", guide);
+  const title = extractText(guide.guideTitle) || "Untitled Guide";
   const description =
-    guide.guideFullDescription || guide.guideCardDescription || "";
+    extractText(guide.guideFullDescription) ||
+    extractText(guide.guideCardDescription) ||
+    "";
   const imageUrl =
-    guide?.guideImage?.url || guide?.image?.url || guide?.blogPostImage?.url || "";
+    guide?.guideImage?.url ||
+    guide?.image?.url ||
+    guide?.blogPostImage?.url ||
+    "";
 
   return (
     <div className="max-w-[1100px] mx-auto px-4 py-10 md:py-16">
       {/* Hero section */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-start">
         {/* Left: Cover/Image */}
-        <div className="flex justify-center md:justify-start">
-          <div className="bg-gray-50 border border-gray-200 rounded-xl overflow-hidden shadow-sm w-full max-w-md">
+        <div className="flex justify-center pt-2">
+          <div className="bg-gray-50 border border-gray-200 rounded-xl overflow-hidden shadow-sm w-full max-w-[344px] mx-auto">
             {imageUrl ? (
-              <img
-                src={imageUrl}
-                alt={title}
-                className="w-full h-auto"
-              />
+              <div className="aspect-square w-full">
+                <img
+                  src={imageUrl}
+                  alt={title}
+                  className="w-full h-full object-cover"
+                />
+              </div>
             ) : (
-              <div className="aspect-[3/4] w-full bg-gray-100 animate-pulse" />
+              <div className="aspect-square w-full bg-gray-100 animate-pulse" />
             )}
           </div>
         </div>
@@ -64,8 +139,8 @@ export default async function GuidePage({
             </span>
           </h1>
 
-          <p className="mt-6 text-gray-700 text-lg">
-            {guide.guideSubtitle || "Practical frameworks and step-by-step systems that actually work."}
+          <p className="mt-6 text-gray-700 text-lg whitespace-pre-wrap">
+            {description || ""}
           </p>
 
           {/* Inline subscribe form (client component) */}
@@ -73,16 +148,13 @@ export default async function GuidePage({
             <NewsletterForm />
           </div>
 
-          <p className="mt-2 text-sm text-gray-500">Free for now, cancel anytime.</p>
+          <p className="mt-2 text-sm text-gray-500">
+            Free for now, cancel anytime.
+          </p>
         </div>
       </div>
 
-      {/* Body */}
-      <div className="mt-12 md:mt-16 max-w-3xl">
-        <div className="prose prose-lg max-w-none text-gray-800">
-          <p className="whitespace-pre-wrap">{description}</p>
-        </div>
-      </div>
+      {/* Body (optional extra content can be added below) */}
     </div>
   );
 }

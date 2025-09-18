@@ -20,7 +20,7 @@
       "required": true
     },
     "guideFullDescription": {
-      "type": "string"
+      "type": "text"
     },
     "Image": {
       "type": "media",

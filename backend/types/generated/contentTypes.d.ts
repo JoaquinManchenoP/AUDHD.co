@@ -425,7 +425,7 @@ export interface ApiAdhdGuideAdhdGuide extends Struct.CollectionTypeSchema {
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     guideCardDescription: Schema.Attribute.String & Schema.Attribute.Required;
-    guideFullDescription: Schema.Attribute.String;
+    guideFullDescription: Schema.Attribute.Text;
     guideTitle: Schema.Attribute.String & Schema.Attribute.Required;
     Image: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
