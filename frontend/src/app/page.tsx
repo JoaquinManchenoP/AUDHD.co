@@ -27,12 +27,12 @@ async function fetchMainGuides(): Promise<MainGuide[]> {
   try {
     console.log("🔄 Fetching content from Strapi collections...");
 
-    // Prefer the dedicated MainPageGuides collection
+    // Prefer the dedicated MainPageGuides collection (try likely REST slugs)
     const collections = [
-      "main-page-guides",
-      "MainPageGuides",
-      "mainPageGuides",
-    ]; // try common variants
+      "mainPageGuides", // exact name provided
+      "main-page-guides", // Strapi auto REST slug (kebab-case)
+      "MainPageGuides", // fallback variant
+    ];
     let guides: any[] = [];
     let usedCollection = "";
 
