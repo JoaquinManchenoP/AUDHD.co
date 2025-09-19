@@ -10,25 +10,13 @@ export default function Footer() {
 
         <div className="flex items-center gap-6 mb-8">
           <Link
-            href="https://twitter.com"
+            href="https://x.com/autisticadhdco"
             className="text-gray-600 hover:text-[#fcc029] transition-colors"
           >
             Twitter
           </Link>
           <Link
-            href="https://youtube.com"
-            className="text-gray-600 hover:text-[#fcc029] transition-colors"
-          >
-            Youtube
-          </Link>
-          <Link
-            href="https://linkedin.com"
-            className="text-gray-600 hover:text-[#fcc029] transition-colors"
-          >
-            LinkedIn
-          </Link>
-          <Link
-            href="https://instagram.com"
+            href="https://www.instagram.com/autisticadhdco/"
             className="text-gray-600 hover:text-[#fcc029] transition-colors"
           >
             Instagram

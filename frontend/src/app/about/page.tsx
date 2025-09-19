@@ -21,58 +21,32 @@ export default function AboutPage() {
 
         {/* Content */}
         <div className="space-y-6 text-lg max-w-[550px]">
-          <p>Hi! 👋</p>
-
-          <p>Thanks for checking us out.</p>
-
+          <p>Hey there</p>
           <p>
-            AuDHD.co started because we got tired of seeing the same old advice
-            that just doesn't work for neurodivergent brains. You know the ones
-            - "just make a list" or "try harder to focus." Yeah, right.
+            I’m JJ. For most of my life, I felt like I was always struggling,
+            socially, academically, emotionally. Everything just seemed so hard.
           </p>
-
           <p>
-            We're building something different here. A place where ADHD and
-            autistic folks can find strategies that actually make sense for how
-            our brains work. No BS, no "miracle cures," just real stuff that
-            helps.
+            I was great at the things I loved, like playing guitar, gaming, and
+            even sports. But when it came to school, work, or relationships, I
+            constantly felt like I behind everyone else.
           </p>
-
-          <p>Here's what we're about:</p>
-
-          <ul className="space-y-4 list-none">
-            <li className="pl-4 border-l-2 border-[#fcc029]">
-              • We're all neurodivergent here. No outside "experts" telling us
-              what to do - just real people sharing what actually works.
-            </li>
-            <li className="pl-4 border-l-2 border-[#fcc029]">
-              • We only share stuff we've tried ourselves. If it doesn't work in
-              real life, you won't find it here.
-            </li>
-            <li className="pl-4 border-l-2 border-[#fcc029]">
-              • Our community keeps growing - over 5,000 people read our weekly
-              notes. Pretty cool to see we're not alone in this.
-            </li>
-          </ul>
-
           <p>
-            Look, we've tried all those fancy productivity systems and life
-            hacks too. Most of them flopped hard. But that's okay - each fail
-            taught us something new about what actually works for brains like
-            ours.
+            For years, I thought all of this came was because of my childhood
+            trauma. It wasn’t until I was 29 years old that I finally found out
+            what was going on: I was diagnosed with ADHD and Autism.
           </p>
-
           <p>
-            Now we share what works through our newsletter and guides. No fluff,
-            no corporate speak, just straightforward strategies you can actually
-            use.
+            That moment changed everything. Once I understood what was really
+            going on, I dedicated myself to learning how my brain works. Over
+            time, through experiments, mistakes, and persistence, I found ways
+            to make my life feel simpler, healthier, and far less overwhelming.
           </p>
-
-          <p>Stick around - we think you'll like it here.</p>
-
-          <div className="pt-8">
-            <p className="font-display text-2xl">AuDHD.co</p>
-          </div>
+          <p>
+            Today, I am happier, more positive, and less anxious than I have
+            ever been. And now I share what I have learned so others with the
+            same struggles can find an easier way.
+          </p>
         </div>
       </div>
 
@@ -86,9 +60,10 @@ export default function AboutPage() {
         >
           <div className="bg-gradient-to-r from-[#fcc029]/10 via-[#fcc029]/5 to-transparent p-6">
             <p className="text-base font-medium text-gray-900 mb-3">
-              For more strategies and lessons on ADHD and Autism, subscribe to
-              my weekly newsletter.
+              Get weekly strategies and lessons on ADHD and Autism straight to
+              your inbox.
             </p>
+            <p>Join here! (It's free)</p>
             <NewsletterForm />
           </div>
         </motion.div>
@@ -103,8 +78,8 @@ export default function AboutPage() {
           className="bg-gradient-to-r from-[#fcc029]/10 via-[#fcc029]/5 to-transparent p-4"
         >
           <p className="text-base font-medium text-gray-900 mb-3">
-            For more strategies and lessons on ADHD and Autism, subscribe to my
-            weekly newsletter.
+            Get weekly strategies and lessons on ADHD and Autism straight to
+            your inbox.
           </p>
           <NewsletterForm />
         </motion.div>
