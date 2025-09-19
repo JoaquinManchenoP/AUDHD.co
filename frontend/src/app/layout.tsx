@@ -24,6 +24,19 @@ export const metadata: Metadata = {
     shortcut: "/favicon.ico",
     apple: "/favicon.ico",
   },
+  openGraph: {
+    title: "AuDHD.co - The Autistic & ADHD Perspective",
+    description: "Practical frameworks & tools for neurodivergent minds",
+    images: ["/og-image.jpg"],
+    type: "website",
+    siteName: "AuDHD.co",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "AuDHD.co - The Autistic & ADHD Perspective",
+    description: "Practical frameworks & tools for neurodivergent minds",
+    images: ["/og-image.jpg"],
+  },
 };
 
 export default function RootLayout({

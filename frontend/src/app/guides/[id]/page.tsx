@@ -8,54 +8,68 @@ const STRAPI_URL = (
 ).replace(/\/+$/, "");
 
 async function fetchGuide(id: string) {
-  // Try direct by-id endpoint first
-  const byIdUrl = `${STRAPI_URL}/api/adhd-guides/${id}?populate=*`;
-  try {
-    const res = await fetch(byIdUrl, { next: { revalidate: 60 } });
-    console.log(`[GuidePage] GET ${byIdUrl} → ${res.status}`);
-    if (res.ok) {
-      const data = await res.json();
-      console.log(
-        "[GuidePage] Raw response (byId)",
-        JSON.stringify(data, null, 2)
-      );
-      const item = data?.data;
-      if (item) {
-        const normalized = item?.attributes
-          ? { id: item.id, ...item.attributes }
-          : item;
-        console.log("[GuidePage] Normalized (byId)", normalized);
-        return normalized;
+  // Try multiple collection names
+  const collections = [
+    "adhd-guides", // Strapi REST slug for API ID (plural)
+    "adhdGuide", // Singular form
+    "adhdGuides", // Alternative plural form
+    "main-guides", // Fallback
+    "blog-posts", // Another fallback
+  ];
+
+  for (const collection of collections) {
+    // Try direct by-id endpoint first
+    const byIdUrl = `${STRAPI_URL}/api/${collection}/${id}?populate=*`;
+    try {
+      const res = await fetch(byIdUrl, { next: { revalidate: 60 } });
+      console.log(`[GuidePage] GET ${byIdUrl} → ${res.status}`);
+      if (res.ok) {
+        const data = await res.json();
+        console.log(
+          "[GuidePage] Raw response (byId)",
+          JSON.stringify(data, null, 2)
+        );
+        const item = data?.data;
+        if (item) {
+          const normalized = item?.attributes
+            ? { id: item.id, ...item.attributes }
+            : item;
+          console.log("[GuidePage] Normalized (byId)", normalized);
+          return normalized;
+        }
       }
+    } catch (e) {
+      console.log(`[GuidePage] Error byId fetch for ${collection}:`, e);
     }
-  } catch (e) {
-    console.log("[GuidePage] Error byId fetch:", e);
+
+    // Fallback: collection query with id filter (works with find permission)
+    const filterUrl = `${STRAPI_URL}/api/${collection}?filters[id][$eq]=${encodeURIComponent(
+      id
+    )}&populate=*`;
+    try {
+      const res = await fetch(filterUrl, { next: { revalidate: 60 } });
+      console.log(`[GuidePage] GET ${filterUrl} → ${res.status}`);
+      if (res.ok) {
+        const data = await res.json();
+        console.log(
+          "[GuidePage] Raw response (filter)",
+          JSON.stringify(data, null, 2)
+        );
+        const item = Array.isArray(data?.data) ? data.data[0] : null;
+        if (item) {
+          const normalized = item?.attributes
+            ? { id: item.id, ...item.attributes }
+            : item;
+          console.log("[GuidePage] Normalized (filter)", normalized);
+          return normalized;
+        }
+      }
+    } catch (e) {
+      console.log(`[GuidePage] Error filter fetch for ${collection}:`, e);
+    }
   }
 
-  // Fallback: collection query with id filter (works with find permission)
-  const filterUrl = `${STRAPI_URL}/api/adhd-guides?filters[id][$eq]=${encodeURIComponent(
-    id
-  )}&populate=*`;
-  try {
-    const res = await fetch(filterUrl, { next: { revalidate: 60 } });
-    console.log(`[GuidePage] GET ${filterUrl} → ${res.status}`);
-    if (!res.ok) return null;
-    const data = await res.json();
-    console.log(
-      "[GuidePage] Raw response (filter)",
-      JSON.stringify(data, null, 2)
-    );
-    const item = Array.isArray(data?.data) ? data.data[0] : null;
-    if (!item) return null;
-    const normalized = item?.attributes
-      ? { id: item.id, ...item.attributes }
-      : item;
-    console.log("[GuidePage] Normalized (filter)", normalized);
-    return normalized;
-  } catch (e) {
-    console.log("[GuidePage] Error filter fetch:", e);
-    return null;
-  }
+  return null;
 }
 
 export default async function GuidePage({

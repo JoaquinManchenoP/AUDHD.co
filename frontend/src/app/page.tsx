@@ -27,9 +27,13 @@ async function fetchMainGuides(): Promise<MainGuide[]> {
   try {
     console.log("🔄 Fetching content from Strapi collections...");
 
-    // Prefer the ADHD Guides collection
+    // Try multiple collection names to find the correct one
     const collections = [
       "adhd-guides", // Strapi REST slug for API ID (plural)
+      "adhdGuide",   // Singular form
+      "adhdGuides",  // Alternative plural form
+      "main-guides", // Fallback
+      "blog-posts",  // Another fallback
     ];
     let guides: any[] = [];
     let usedCollection = "";
