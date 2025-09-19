@@ -19,6 +19,11 @@ const fredoka = Fredoka({
 export const metadata: Metadata = {
   title: "AuDHD.co",
   description: "Practical frameworks & tools for neurodivergent minds",
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/favicon.ico",
+  },
 };
 
 export default function RootLayout({

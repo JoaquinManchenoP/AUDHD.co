@@ -49,7 +49,7 @@ export default function NewsletterForm() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Enter your email"
-            className="w-full px-4 py-3 text-base bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#fcc029] focus:border-transparent transition-all duration-300"
+            className="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#fcc029] focus:border-transparent transition-all duration-300"
             required
           />
         </motion.div>
@@ -59,14 +59,14 @@ export default function NewsletterForm() {
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           transition={{ type: "spring", stiffness: 400, damping: 25 }}
-          className="w-full px-4 py-3 text-base font-medium text-gray-900 bg-[#fcc029] rounded-lg hover:bg-[#fcc029]/90 active:scale-[0.98] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base font-medium text-gray-900 bg-[#fcc029] rounded-lg hover:bg-[#fcc029]/90 active:scale-[0.98] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {status === "loading" ? "Subscribing..." : "Subscribe"}
         </motion.button>
       </div>
 
       {status === "idle" && (
-        <p className="mt-2 text-sm text-gray-500">
+        <p className="mt-2 text-xs sm:text-sm text-gray-500">
           No spam. Unsubscribe anytime.
         </p>
       )}
@@ -75,7 +75,7 @@ export default function NewsletterForm() {
         <motion.p
           initial={{ opacity: 0, y: 5 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mt-2 text-sm text-green-600"
+          className="mt-2 text-xs sm:text-sm text-green-600"
         >
           Thanks for subscribing! Check your email.
         </motion.p>
@@ -85,7 +85,7 @@ export default function NewsletterForm() {
         <motion.p
           initial={{ opacity: 0, y: 5 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mt-2 text-sm text-red-600"
+          className="mt-2 text-xs sm:text-sm text-red-600"
         >
           Something went wrong. Please try again.
         </motion.p>

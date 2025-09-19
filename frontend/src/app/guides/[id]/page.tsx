@@ -110,12 +110,12 @@ export default async function GuidePage({
     "";
 
   return (
-    <div className="max-w-[1100px] mx-auto px-4 py-10 md:py-16">
+    <div className="max-w-[1100px] mx-auto px-4 py-6 sm:py-10 md:py-16">
       {/* Hero section */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-start">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8 md:gap-10 items-start">
         {/* Left: Cover/Image */}
         <div className="flex justify-center pt-2">
-          <div className="bg-gray-50 border border-gray-200 rounded-xl overflow-hidden shadow-sm w-full max-w-[344px] mx-auto">
+          <div className="bg-gray-50 border border-gray-200 rounded-xl overflow-hidden shadow-sm w-full max-w-[280px] sm:max-w-[320px] md:max-w-[344px] mx-auto">
             {imageUrl ? (
               <div className="aspect-square w-full">
                 <img
@@ -132,23 +132,23 @@ export default async function GuidePage({
 
         {/* Right: Title, subtitle, form */}
         <div>
-          <h1 className="font-display text-4xl md:text-5xl font-bold leading-tight text-gray-900">
+          <h1 className="font-display text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-bold leading-tight text-gray-900">
             {title}
             <span className="block bg-[#fcc029]/50 -mx-1 px-1 w-fit mt-2 text-gray-900">
               turn visitors into progress
             </span>
           </h1>
 
-          <p className="mt-6 text-gray-700 text-lg whitespace-pre-wrap">
+          <p className="mt-4 sm:mt-6 text-gray-700 text-sm sm:text-base md:text-lg whitespace-pre-wrap">
             {description || ""}
           </p>
 
           {/* Inline subscribe form (client component) */}
-          <div className="mt-6">
+          <div className="mt-4 sm:mt-6">
             <NewsletterForm />
           </div>
 
-          <p className="mt-2 text-sm text-gray-500">
+          <p className="mt-2 text-xs sm:text-sm text-gray-500">
             Free for now, cancel anytime.
           </p>
         </div>

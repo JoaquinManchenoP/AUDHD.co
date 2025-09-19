@@ -111,16 +111,18 @@ export default function BioSection() {
                   <h3 className="font-bold text-[25px]">AuDHD.co</h3>
                 </Link>
               </div>
-
               <div className="space-y-3">
-                <p className="text-gray-700">
-                  Most of my life felt like a struggle.{" "}
-                  <span className="mt-1">
+                <div className="text-gray-700">
+                  <p className="font-bold mb-2">Hi there I'm JJ 👋</p>
+                  <p className="pb-2 pt-2">
                     Getting diagnosed with ADHD and Autism helped me understand
-                    why. Now I share what I’ve learned about working with my
-                    brain, hoping it helps others too.
-                  </span>
-                </p>
+                    why I am the way I am.{" "}
+                  </p>
+                  <p>
+                    Now I share what I've learned about working with my brain,
+                    hoping it helps others too.
+                  </p>
+                </div>
               </div>
             </div>
           </div>

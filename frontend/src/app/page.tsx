@@ -254,28 +254,27 @@ export default async function Home() {
   await checkAdhdGuideAccess();
   return (
     <div className="min-h-screen">
-      <div className="max-w-[1000px] mx-auto px-4 py-8 md:py-12">
-        <div className="flex flex-col lg:flex-row lg:gap-24">
+      <div className="max-w-[1000px] mx-auto px-4 py-6 sm:py-8 md:py-12">
+        <div className="flex flex-col md:flex-row md:gap-16 lg:gap-24">
           {/* Main Content */}
           <div className="flex-1 max-w-[520px]">
-            <div className="space-y-8 md:space-y-16">
+            <div className="space-y-6 sm:space-y-8 md:space-y-16">
               {/* Main Content Section */}
               <div>
-                <h1 className="font-display text-[32px] leading-tight md:text-4xl lg:text-5xl font-bold text-gray-900">
+                <h1 className="font-display text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-tight font-bold text-gray-900">
                   The Autism & ADHD Perspective
                   <span className="text-primary block mt-1"></span>
                 </h1>
-                <div className="mt-4 md:mt-6">
-                  <p className="text-base md:text-lg text-gray-700">
-                    A weekly letter with practical frameworks, tools, and
-                    strategies for ADHD and Autism. It’s not theory. It’s what
-                    I’ve learned from my experiences, experiments, and mistakes
-                    I've madealong the way.
+                <div className="mt-3 sm:mt-4 md:mt-6">
+                  <p className="text-md xs:text-base sm:text-md md:text-lg text-gray-700">
+                    A weekley newsletter with practical strategies and tools for
+                    living with ADHD and Autism based on what I’ve tried, what’s
+                    worked, and the mistakes I’ve learned from.
                   </p>
                 </div>
 
-                <div className="mt-6 md:mt-8">
-                  <p className="mb-2 text-lg font-bold">
+                <div className="mt-4 sm:mt-6 md:mt-8">
+                  <p className="mb-2 text-base sm:text-lg font-bold">
                     {" "}
                     Join here it's free:
                   </p>
@@ -284,7 +283,7 @@ export default async function Home() {
               </div>
 
               {/* Bio Section on Mobile */}
-              <div className="lg:hidden">
+              <div className="md:hidden">
                 <BioSection />
               </div>
 
@@ -308,7 +307,7 @@ export default async function Home() {
           </div>
 
           {/* Bio Section on Desktop */}
-          <div className="hidden lg:block w-80">
+          <div className="hidden md:block w-80">
             <div className="sticky top-24">
               <BioSection />
             </div>
