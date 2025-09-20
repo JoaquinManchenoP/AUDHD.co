@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "AuDHD.co - The Autistic & ADHD Perspective",
     description: "Practical frameworks & tools for neurodivergent minds",
-    images: ["/og-image.jpg"],
+    images: ["/og-image.png"],
     type: "website",
     siteName: "AuDHD.co",
   },
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "AuDHD.co - The Autistic & ADHD Perspective",
     description: "Practical frameworks & tools for neurodivergent minds",
-    images: ["/og-image.jpg"],
+    images: ["/og-image.png"],
   },
 };
 
