@@ -18,7 +18,7 @@ const fredoka = Fredoka({
 
 export const metadata: Metadata = {
   title: "AuDHD.co",
-  description: "",
+  description: "A guide to doing life with ADHD and Autism or at least avoiding my mistakes",
   icons: {
     icon: "/favicon.ico",
     shortcut: "/favicon.ico",
@@ -26,18 +26,30 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "AuDHD.co - The Autistic & ADHD Perspective",
-    description:
-      "A guide to doing life with ADHD and Autism or at least avoing my mistakes.",
-    images: ["/og-image.png"],
+    description: "A guide to doing life with ADHD and Autism or at least avoiding my mistakes",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "AuDHD.co - The Autistic & ADHD Perspective",
+      },
+    ],
     type: "website",
     siteName: "AuDHD.co",
+    url: "https://audhd-co.vercel.app",
   },
   twitter: {
     card: "summary_large_image",
     title: "AuDHD.co - The Autistic & ADHD Perspective",
-    description:
-      "A guide to doing life with ADHD and Autism or at least avoing my mistakes",
+    description: "A guide to doing life with ADHD and Autism or at least avoiding my mistakes",
     images: ["/og-image.png"],
+    creator: "@autisticadhdco",
+    site: "@autisticadhdco",
+  },
+  robots: {
+    index: true,
+    follow: true,
   },
 };
 
@@ -48,6 +60,30 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${comicNeue.variable} ${fredoka.variable}`}>
+      <head>
+        {/* Override any external meta tags */}
+        <meta property="og:title" content="AuDHD.co - The Autistic & ADHD Perspective" />
+        <meta property="og:description" content="A guide to doing life with ADHD and Autism or at least avoiding my mistakes" />
+        <meta property="og:image" content="https://audhd-co.vercel.app/og-image.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:alt" content="AuDHD.co - The Autistic & ADHD Perspective" />
+        <meta property="og:url" content="https://audhd-co.vercel.app" />
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="AuDHD.co" />
+        
+        {/* Twitter Card overrides */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="AuDHD.co - The Autistic & ADHD Perspective" />
+        <meta name="twitter:description" content="A guide to doing life with ADHD and Autism or at least avoiding my mistakes" />
+        <meta name="twitter:image" content="https://audhd-co.vercel.app/og-image.png" />
+        <meta name="twitter:creator" content="@autisticadhdco" />
+        <meta name="twitter:site" content="@autisticadhdco" />
+        
+        {/* Additional meta tags to prevent external overrides */}
+        <meta name="description" content="A guide to doing life with ADHD and Autism or at least avoiding my mistakes" />
+        <meta name="robots" content="index, follow" />
+      </head>
       <body className="bg-white" suppressHydrationWarning={true}>
         <Layout>{children}</Layout>
         {/* <StrapiConnectivityProbe /> */}
