@@ -120,6 +120,9 @@ export default function RootLayout({
           content="A guide to doing life with ADHD and Autism or at least avoiding my mistakes"
         />
         <meta name="robots" content="index, follow" />
+        
+        {/* Sparkloop referral script */}
+        <script async src="https://js.sparkloop.app/team_06a566221ede.js" data-sparkloop></script>
       </head>
       <body className="bg-white" suppressHydrationWarning={true}>
         <Layout>{children}</Layout>
