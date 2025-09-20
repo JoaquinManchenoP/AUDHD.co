@@ -72,7 +72,22 @@ export default async function BlogPage() {
 
       <div className="max-w-[480px] sm:max-w-[520px] mx-auto">
         {posts.length === 0 ? (
-          <p className="text-gray-600">No posts yet.</p>
+          <div className="text-center py-12">
+            <div className="space-y-4">
+              <div className="text-6xl">🤔</div>
+              <h3 className="text-xl font-display font-semibold text-gray-900">
+                The blog is brewing...
+              </h3>
+              <p className="text-gray-600 max-w-sm mx-auto">
+                I'm cooking up some neurodivergent wisdom. Check back soon for practical strategies that actually work.
+              </p>
+              <div className="pt-4">
+                <p className="text-sm text-gray-500 italic">
+                  "Great things take time. So do I." - Every ADHD brain ever
+                </p>
+              </div>
+            </div>
+          </div>
         ) : (
           <div className="space-y-4">
             {posts.map((post) => {
