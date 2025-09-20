@@ -74,18 +74,9 @@ export default async function BlogPage() {
         {posts.length === 0 ? (
           <div className="text-center py-12">
             <div className="space-y-4">
-              <div className="text-6xl">🤔</div>
-              <h3 className="text-xl font-display font-semibold text-gray-900">
-                The blog is brewing...
+              <h3 className="text-xl font-display font-bold text-gray-900">
+                Working on it...
               </h3>
-              <p className="text-gray-600 max-w-sm mx-auto">
-                I'm cooking up some neurodivergent wisdom. Check back soon for practical strategies that actually work.
-              </p>
-              <div className="pt-4">
-                <p className="text-sm text-gray-500 italic">
-                  "Great things take time. So do I." - Every ADHD brain ever
-                </p>
-              </div>
             </div>
           </div>
         ) : (

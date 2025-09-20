@@ -30,10 +30,10 @@ async function fetchMainGuides(): Promise<MainGuide[]> {
     // Try multiple collection names to find the correct one
     const collections = [
       "adhd-guides", // Strapi REST slug for API ID (plural)
-      "adhdGuide",   // Singular form
-      "adhdGuides",  // Alternative plural form
+      "adhdGuide", // Singular form
+      "adhdGuides", // Alternative plural form
       "main-guides", // Fallback
-      "blog-posts",  // Another fallback
+      "blog-posts", // Another fallback
     ];
     let guides: any[] = [];
     let usedCollection = "";
@@ -153,10 +153,7 @@ async function MainGuides() {
           Popular guides
         </h2>
         <div className="text-center py-8">
-          <p className="text-gray-500">No guides available yet.</p>
-          <p className="text-sm text-gray-400 mt-2">
-            Add some entries to the xone collection in Strapi to see data here.
-          </p>
+          <p className="text-gray-500">Working on it...</p>
         </div>
       </div>
     );

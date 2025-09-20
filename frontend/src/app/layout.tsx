@@ -17,13 +17,17 @@ const fredoka = Fredoka({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://autisticadhd.co"),
   title: "AuDHD.co",
   description:
     "A guide to doing life with ADHD and Autism or at least avoiding my mistakes",
   icons: {
-    icon: "/favicon.ico",
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon.png", sizes: "32x32", type: "image/png" },
+    ],
     shortcut: "/favicon.ico",
-    apple: "/favicon.ico",
+    apple: "/favicon.png",
   },
   openGraph: {
     title: "AuDHD.co - The Autistic & ADHD Perspective",
@@ -64,6 +68,12 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${comicNeue.variable} ${fredoka.variable}`}>
       <head>
+        {/* Explicit favicon links to override Vercel default */}
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" href="/favicon.png" type="image/png" sizes="32x32" />
+        <link rel="shortcut icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" href="/favicon.png" />
+
         {/* Override any external meta tags */}
         <meta
           property="og:title"
