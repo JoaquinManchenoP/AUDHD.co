@@ -18,7 +18,7 @@ const fredoka = Fredoka({
 
 export const metadata: Metadata = {
   title: "AuDHD.co",
-  description: "Practical frameworks & tools for neurodivergent minds",
+  description: "",
   icons: {
     icon: "/favicon.ico",
     shortcut: "/favicon.ico",
@@ -26,7 +26,8 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "AuDHD.co - The Autistic & ADHD Perspective",
-    description: "Practical frameworks & tools for neurodivergent minds",
+    description:
+      "A guide to doing life with ADHD and Autism or at least avoing my mistakes.",
     images: ["/og-image.png"],
     type: "website",
     siteName: "AuDHD.co",
@@ -34,7 +35,8 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "AuDHD.co - The Autistic & ADHD Perspective",
-    description: "Practical frameworks & tools for neurodivergent minds",
+    description:
+      "A guide to doing life with ADHD and Autism or at least avoing my mistakes",
     images: ["/og-image.png"],
   },
 };
