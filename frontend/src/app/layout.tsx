@@ -127,6 +127,23 @@ export default function RootLayout({
           src="https://js.sparkloop.app/team_06a566221ede.js"
           data-sparkloop
         ></script>
+
+        {/* Google tag (gtag.js) */}
+        <script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-G8L8XE8RP6"
+        ></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-G8L8XE8RP6');
+            `,
+          }}
+        />
       </head>
       <body className="bg-white" suppressHydrationWarning={true}>
         <Layout>{children}</Layout>
