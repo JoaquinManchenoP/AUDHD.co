@@ -117,10 +117,27 @@ export default async function GuidePage({
     extractText(guide.guideFullDescription) ||
     extractText(guide.guideCardDescription) ||
     "";
+  // Helper: resolve Strapi media url from various shapes
+  const resolveMediaUrl = (value: any): string => {
+    // Strapi media can be: single object, array of objects, or { data: {...} }
+    const node = Array.isArray(value)
+      ? value[0]
+      : value?.data
+      ? value.data?.attributes || value.data
+      : value;
+
+    const candidate = node?.url || "";
+    if (!candidate) return "";
+    return candidate.startsWith("http")
+      ? candidate
+      : `${STRAPI_URL}${candidate.startsWith("/") ? "" : "/"}${candidate}`;
+  };
+
   const imageUrl =
-    guide?.guideImage?.url ||
-    guide?.image?.url ||
-    guide?.blogPostImage?.url ||
+    resolveMediaUrl(guide?.Image) ||
+    resolveMediaUrl(guide?.guideImage) ||
+    resolveMediaUrl(guide?.image) ||
+    resolveMediaUrl(guide?.blogPostImage) ||
     "";
 
   return (
@@ -148,9 +165,6 @@ export default async function GuidePage({
         <div>
           <h1 className="font-display text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-bold leading-tight text-gray-900">
             {title}
-            <span className="block bg-[#fcc029]/50 -mx-1 px-1 w-fit mt-2 text-gray-900">
-              turn visitors into progress
-            </span>
           </h1>
 
           <p className="mt-4 sm:mt-6 text-gray-700 text-sm sm:text-base md:text-lg whitespace-pre-wrap">
@@ -161,10 +175,6 @@ export default async function GuidePage({
           <div className="mt-4 sm:mt-6">
             <NewsletterForm />
           </div>
-
-          <p className="mt-2 text-xs sm:text-sm text-gray-500">
-            Free for now, cancel anytime.
-          </p>
         </div>
       </div>
 
