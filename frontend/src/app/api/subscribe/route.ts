@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
   try {
-    const { email } = await req.json();
+    const { email, custom_fields } = await req.json();
 
     if (!email || typeof email !== "string") {
       return NextResponse.json(
@@ -51,6 +51,14 @@ export async function POST(req: NextRequest) {
       reactivate_existing: true,
       send_welcome_email: true,
     };
+    // Pass through any custom fields (e.g., lead_source)
+    if (custom_fields && typeof custom_fields === "object") {
+      // Beehiiv expects an array of { name, value }
+      const arr = Object.entries(custom_fields)
+        .filter(([, v]) => typeof v === "string")
+        .map(([name, value]) => ({ name, value }));
+      if (arr.length > 0) payload.custom_fields = arr;
+    }
 
     if (clientIp) payload.ip_address = clientIp;
     if (userAgent) payload.user_agent = userAgent;
@@ -75,6 +83,7 @@ export async function POST(req: NextRequest) {
 
     if (!response.ok) {
       const errorBody = await safeJson(response);
+      console.error("[subscribe] Beehiiv error", response.status, errorBody);
       return NextResponse.json(
         { error: "Failed to subscribe", details: errorBody },
         { status: response.status }
@@ -84,6 +93,7 @@ export async function POST(req: NextRequest) {
     const data = await response.json();
     return NextResponse.json({ success: true, data }, { status: 200 });
   } catch (error: unknown) {
+    console.error("[subscribe] Unexpected server error", error);
     return NextResponse.json(
       { error: "Unexpected server error" },
       { status: 500 }

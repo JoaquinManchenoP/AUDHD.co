@@ -3,7 +3,11 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 
-export default function NewsletterForm() {
+type NewsletterFormProps = {
+  customFields?: Record<string, string>;
+};
+
+export default function NewsletterForm({ customFields }: NewsletterFormProps) {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<
     "idle" | "loading" | "success" | "error"
@@ -18,11 +22,17 @@ export default function NewsletterForm() {
       const res = await fetch("/api/subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, custom_fields: customFields }),
       });
 
       if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
+        const text = await res.text();
+        let err: any = {};
+        try {
+          err = JSON.parse(text);
+        } catch {
+          err = { raw: text };
+        }
         console.error("[Newsletter] Subscription failed:", err);
         setStatus("error");
         return;
