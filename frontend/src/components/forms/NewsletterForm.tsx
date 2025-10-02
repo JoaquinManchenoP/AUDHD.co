@@ -1,13 +1,19 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 
 type NewsletterFormProps = {
   customFields?: Record<string, string>;
+  redirectOnSuccess?: boolean;
 };
 
-export default function NewsletterForm({ customFields }: NewsletterFormProps) {
+export default function NewsletterForm({ 
+  customFields,
+  redirectOnSuccess = false 
+}: NewsletterFormProps) {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<
     "idle" | "loading" | "success" | "error"
@@ -40,6 +46,13 @@ export default function NewsletterForm({ customFields }: NewsletterFormProps) {
 
       setStatus("success");
       setEmail("");
+      
+      // Redirect to thank you page if enabled
+      if (redirectOnSuccess) {
+        setTimeout(() => {
+          router.push("/thank-you");
+        }, 500);
+      }
     } catch (error) {
       console.error("[Newsletter] Unexpected error:", error);
       setStatus("error");

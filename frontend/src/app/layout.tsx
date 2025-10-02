@@ -66,7 +66,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${comicNeue.variable} ${fredoka.variable}`}>
+    <html
+      lang="en"
+      className={`${comicNeue.variable} ${fredoka.variable}`}
+      suppressHydrationWarning
+    >
       <head>
         {/* Explicit favicon links to override Vercel default */}
         <link rel="icon" href="/favicon.ico" sizes="any" />

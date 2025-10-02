@@ -272,7 +272,10 @@ export default async function GuidePage({
 
           {/* Inline subscribe form (client component) with lead_source override */}
           <div className="mt-4 sm:mt-6">
-            <NewsletterForm customFields={{ lead_source: "lead_magnet" }} />
+            <NewsletterForm
+              customFields={{ lead_source: "lead_magnet" }}
+              redirectOnSuccess={true}
+            />
           </div>
         </div>
       </div>
