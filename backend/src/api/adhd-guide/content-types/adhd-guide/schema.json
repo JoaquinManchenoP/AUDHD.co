@@ -22,6 +22,12 @@
     "guideFullDescription": {
       "type": "text"
     },
+    "slug": {
+      "type": "uid",
+      "targetField": "guideTitle",
+      "required": true,
+      "unique": true
+    },
     "Image": {
       "type": "media",
       "multiple": false,

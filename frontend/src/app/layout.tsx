@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Comic_Neue, Fredoka } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import Layout from "@/components/layout/Layout";
 // import StrapiConnectivityProbe from "@/components/debug/StrapiConnectivityProbe";
@@ -126,28 +127,26 @@ export default function RootLayout({
         <meta name="robots" content="index, follow" />
 
         {/* Sparkloop referral script */}
-        <script
-          async
+        <Script
           src="https://js.sparkloop.app/team_06a566221ede.js"
           data-sparkloop
-        ></script>
+          strategy="afterInteractive"
+        />
 
         {/* Google tag (gtag.js) */}
-        <script
-          async
+        <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-G8L8XE8RP6"
-        ></script>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-G8L8XE8RP6');
-            `,
-          }}
+          strategy="afterInteractive"
         />
+        <Script id="gtag-init" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-G8L8XE8RP6');
+          `}
+        </Script>
       </head>
       <body className="bg-white" suppressHydrationWarning={true}>
         <Layout>{children}</Layout>

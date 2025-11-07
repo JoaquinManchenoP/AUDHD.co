@@ -50,9 +50,23 @@ async function fetchMainGuides(): Promise<MainGuide[]> {
 
           // Normalize Strapi v4 response: items may be in attributes
           const items = rawData.data || [];
-          guides = items.map((item: any) =>
-            item?.attributes ? { id: item.id, ...item.attributes } : item
-          );
+          guides = items.map((item: any) => {
+            if (item?.attributes) {
+              const attrs = item.attributes;
+              const slugCandidate =
+                attrs.slug ||
+                attrs.uid ||
+                attrs.handle ||
+                attrs.permalink ||
+                item.id;
+              return {
+                id: String(item.id),
+                slug: String(slugCandidate ?? item.id),
+                ...attrs,
+              };
+            }
+            return item;
+          });
           usedCollection = collection;
           console.log(
             `✅ Successfully fetched from ${collection}:`,
@@ -180,10 +194,12 @@ async function MainGuides() {
           // Use helper function to get data safely
           const guideData = getGuideData(guide);
 
+          const linkHandle = String(guide.slug || guide.id);
+
           return (
             <Link
-              key={guide.id}
-              href={`/guides/${guide.id}`}
+              key={linkHandle}
+              href={`/guides/${linkHandle}`}
               className="block group p-4 md:p-5 bg-white border border-gray-200 rounded-lg hover:border-[#fcc029]/30 hover:shadow-lg active:scale-98 active:shadow-sm active:border-[#fcc029] transition-all duration-300"
             >
               <div className="flex items-start justify-between">
