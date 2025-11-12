@@ -126,18 +126,47 @@ async function fetchGuide(handle: string) {
 
 // Helper: resolve Strapi media url from various shapes
 function resolveMediaUrl(value: any): string {
-  // Strapi media can be: single object, array of objects, or { data: {...} }
-  const node = Array.isArray(value)
-    ? value[0]
-    : value?.data
-    ? value.data?.attributes || value.data
-    : value;
+  if (!value) return "";
 
-  const candidate = node?.url || "";
-  if (!candidate) return "";
-  return candidate.startsWith("http")
-    ? candidate
-    : `${STRAPI_URL}${candidate.startsWith("/") ? "" : "/"}${candidate}`;
+  const normalizeNodes = (input: any): any[] => {
+    if (!input) return [];
+    if (Array.isArray(input)) return input.flatMap((item) => normalizeNodes(item));
+    if (input.data) {
+      const data = input.data;
+      if (Array.isArray(data)) {
+        return data.flatMap((item) => normalizeNodes(item));
+      }
+      return normalizeNodes(data.attributes || data);
+    }
+    if (input.attributes) return [input.attributes];
+    return [input];
+  };
+
+  const pickUrl = (node: any): string => {
+    if (!node) return "";
+    const formats = node.formats || {};
+    return (
+      node.url ||
+      node.src ||
+      formats.large?.url ||
+      formats.medium?.url ||
+      formats.small?.url ||
+      formats.thumbnail?.url ||
+      Object.values(formats)[0]?.url ||
+      ""
+    );
+  };
+
+  const nodes = normalizeNodes(value);
+  for (const node of nodes) {
+    const candidate = pickUrl(node);
+    if (candidate) {
+      return candidate.startsWith("http")
+        ? candidate
+        : `${STRAPI_URL}${candidate.startsWith("/") ? "" : "/"}${candidate}`;
+    }
+  }
+  return "";
 }
 
 // Generate metadata for each guide page

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import NewsletterForm from "@/components/forms/NewsletterForm";
-import BioSection from "@/components/BioSection";
+import BioSectionClient from "@/components/BioSectionClient";
 import { Suspense } from "react";
 
 const STRAPI_URL = (
@@ -301,7 +301,7 @@ export default async function Home() {
 
               {/* Bio Section on Mobile */}
               <div className="md:hidden">
-                <BioSection />
+                <BioSectionClient />
               </div>
 
               {/* Popular Guides - Now Dynamic from Strapi */}
@@ -326,7 +326,7 @@ export default async function Home() {
           {/* Bio Section on Desktop */}
           <div className="hidden md:block w-80">
             <div className="sticky top-24">
-              <BioSection />
+              <BioSectionClient />
             </div>
           </div>
         </div>

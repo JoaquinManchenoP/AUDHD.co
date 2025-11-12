@@ -17,6 +17,8 @@ const fredoka = Fredoka({
   variable: "--font-fredoka",
 });
 
+const MAIN_OG_IMAGE = "/audhd-perspective.png";
+
 export const metadata: Metadata = {
   metadataBase: new URL("https://autisticadhd.co"),
   title: "AuDHD.co",
@@ -36,9 +38,9 @@ export const metadata: Metadata = {
       "A guide to doing life with ADHD and Autism or at least avoiding my mistakes",
     images: [
       {
-        url: "/og-image.png",
+        url: MAIN_OG_IMAGE,
         width: 1200,
-        height: 630,
+        height: 675,
         alt: "AuDHD.co - The Autistic & ADHD Perspective",
       },
     ],
@@ -51,7 +53,7 @@ export const metadata: Metadata = {
     title: "AuDHD.co - The Autistic & ADHD Perspective",
     description:
       "A guide to doing life with ADHD and Autism or at least avoiding my mistakes",
-    images: ["/og-image.png"],
+    images: [MAIN_OG_IMAGE],
     creator: "@autisticadhdco",
     site: "@autisticadhdco",
   },
@@ -90,10 +92,10 @@ export default function RootLayout({
         />
         <meta
           property="og:image"
-          content="https://autisticadhd.co/og-image.png"
+          content="https://autisticadhd.co/audhd-perspective.png"
         />
         <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
+        <meta property="og:image:height" content="675" />
         <meta
           property="og:image:alt"
           content="AuDHD.co - The Autistic & ADHD Perspective"
@@ -114,7 +116,7 @@ export default function RootLayout({
         />
         <meta
           name="twitter:image"
-          content="https://autisticadhd.co/og-image.png"
+          content="https://autisticadhd.co/audhd-perspective.png"
         />
         <meta name="twitter:creator" content="@autisticadhdco" />
         <meta name="twitter:site" content="@autisticadhdco" />
